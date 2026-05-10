@@ -1,0 +1,2938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicare HMS – Hospital Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #c0152a;
+  --red-dark: #8f0e1f;
+  --red-light: #fbeaea;
+  --red-mid: #e84060;
+  --white: #ffffff;
+  --bg: #f7f3f3;
+  --border: #e8d8d8;
+  --text: #1a1a1a;
+  --text2: #5a4a4a;
+  --text3: #9a8888;
+  --card: #ffffff;
+  --sidebar: #1a0508;
+  --sidebar-hover: #2d0a10;
+  --sidebar-active: #c0152a;
+  --success: #0f6e56;
+  --success-bg: #e1f5ee;
+  --warn: #ba7517;
+  --warn-bg: #faeeda;
+  --info: #185fa5;
+  --info-bg: #e6f1fb;
+  --shadow: 0 2px 12px rgba(192,21,42,0.08);
+  --shadow-lg: 0 8px 32px rgba(192,21,42,0.12);
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* Cross pattern background */
+.cross-bg{
+  background-color:#fff;
+  background-image:
+    linear-gradient(rgba(192,21,42,0.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(192,21,42,0.06) 1px,transparent 1px),
+    radial-gradient(circle, rgba(192,21,42,0.04) 20%, transparent 20%);
+  background-size:40px 40px,40px 40px,80px 80px;
+}
+
+/* =================== LANDING =================== */
+#landing{min-height:100vh;display:flex;flex-direction:column}
+.landing-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 48px;background:#fff;border-bottom:1.5px solid var(--border);
+  box-shadow:var(--shadow);position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-cross{
+  width:40px;height:40px;background:var(--red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.logo-cross::before,.logo-cross::after{
+  content:'';position:absolute;background:#fff;border-radius:2px;
+}
+.logo-cross::before{width:22px;height:6px}
+.logo-cross::after{width:6px;height:22px}
+.logo-text{font-family:'Playfair Display',serif;font-size:22px;color:var(--red-dark);letter-spacing:-0.5px}
+.logo-sub{font-size:11px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-top:-2px}
+.hero{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:60px 24px;text-align:center;
+}
+.hero h1{font-family:'Playfair Display',serif;font-size:52px;color:var(--red-dark);line-height:1.1;margin-bottom:16px}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:18px;color:var(--text2);max-width:520px;margin:0 auto 40px;line-height:1.7}
+.panel-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;max-width:960px;width:100%;margin:0 auto;
+}
+.panel-card{
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);
+  padding:28px 20px 24px;cursor:pointer;transition:all .2s;text-align:center;
+  position:relative;overflow:hidden;
+}
+.panel-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--red);transform:scaleX(0);transition:transform .2s;
+}
+.panel-card:hover{border-color:var(--red);box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.panel-card:hover::before{transform:scaleX(1)}
+.panel-icon{
+  width:52px;height:52px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;font-size:26px;
+}
+.panel-card h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+.panel-card p{font-size:12px;color:var(--text3);line-height:1.5}
+.cred-badge{
+  margin-top:12px;background:var(--red-light);border:1px solid rgba(192,21,42,0.2);
+  border-radius:6px;padding:6px 10px;font-size:11px;color:var(--red-dark);
+  font-family:monospace;line-height:1.6;text-align:left;
+}
+
+/* =================== LOGIN PAGE =================== */
+#loginPage{
+  min-height:100vh;display:none;align-items:center;justify-content:center;
+  padding:24px;position:relative;
+}
+.login-box{
+  background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);
+  padding:40px;width:100%;max-width:420px;border:1.5px solid var(--border);
+}
+.login-box h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--red-dark);margin-bottom:6px}
+.login-box p{font-size:13px;color:var(--text3);margin-bottom:28px}
+.back-btn{
+  position:absolute;top:24px;left:24px;
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1.5px solid var(--border);color:var(--text2);
+  padding:8px 16px;border-radius:8px;cursor:pointer;font-size:14px;
+  transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.back-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* =================== FORMS =================== */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:10px 14px;border:1.5px solid var(--border);
+  border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;
+  background:#fff;color:var(--text);transition:border-color .15s;outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--red)}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 22px;border-radius:8px;font-size:14px;font-weight:500;
+  cursor:pointer;border:none;transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:var(--red-dark)}
+.btn-outline{background:#fff;border:1.5px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--red);color:var(--red)}
+.btn-danger{background:#fbeaea;color:var(--red);border:1.5px solid rgba(192,21,42,0.2)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-success{background:var(--success-bg);color:var(--success);border:1.5px solid rgba(15,110,86,0.2)}
+.btn-success:hover{background:var(--success);color:#fff}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-full{width:100%}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px}
+.alert-error{background:var(--red-light);color:var(--red-dark);border:1px solid rgba(192,21,42,0.2)}
+.alert-success{background:var(--success-bg);color:var(--success);border:1px solid rgba(15,110,86,0.2)}
+.alert-info{background:var(--info-bg);color:var(--info);border:1px solid rgba(24,95,165,0.2)}
+
+/* =================== APP LAYOUT =================== */
+#appPage{display:none;min-height:100vh;flex-direction:row}
+.sidebar{
+  width:260px;min-height:100vh;background:var(--sidebar);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+  flex-shrink:0;
+}
+.sidebar-logo{
+  padding:22px 20px;border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar-logo .logo-cross{width:34px;height:34px}
+.sidebar-logo .logo-text{font-size:18px;color:#fff}
+.sidebar-logo .logo-sub{color:rgba(255,255,255,0.4)}
+.sidebar-user{
+  padding:16px 20px;background:rgba(255,255,255,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sidebar-user .user-name{font-size:14px;font-weight:500;color:#fff}
+.sidebar-user .user-role{
+  font-size:11px;color:rgba(255,255,255,0.45);text-transform:uppercase;
+  letter-spacing:1px;margin-top:2px;
+}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-section{padding:10px 20px 4px;font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1.5px}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 20px;
+  color:rgba(255,255,255,0.6);cursor:pointer;transition:all .15s;
+  font-size:14px;border-left:3px solid transparent;
+}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:rgba(192,21,42,0.25);color:#fff;border-left-color:var(--red)}
+.nav-item .ni{font-size:18px;min-width:20px}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08)}
+.logout-btn{
+  display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;color:rgba(255,255,255,0.6);cursor:pointer;
+  font-size:13px;font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.logout-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.main-content{flex:1;overflow-y:auto;min-height:100vh}
+.page-header{
+  background:#fff;border-bottom:1.5px solid var(--border);
+  padding:20px 32px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.page-header h1{font-size:20px;font-weight:600;color:var(--text)}
+.page-header p{font-size:13px;color:var(--text3);margin-top:2px}
+.content-area{padding:28px 32px}
+
+/* =================== CARDS / STATS =================== */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{
+  background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);
+  padding:20px;display:flex;flex-direction:column;
+}
+.stat-card .stat-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.stat-card .stat-value{font-size:28px;font-weight:700;color:var(--text)}
+.stat-card .stat-icon{font-size:24px;margin-bottom:10px}
+.stat-card.red .stat-value{color:var(--red)}
+.stat-card.green .stat-value{color:var(--success)}
+.stat-card.blue .stat-value{color:var(--info)}
+.stat-card.amber .stat-value{color:var(--warn)}
+
+.card{background:#fff;border-radius:var(--radius-lg);border:1.5px solid var(--border);padding:24px;margin-bottom:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.card-header h2{font-size:16px;font-weight:600;color:var(--text)}
+.card-header p{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* =================== TABLE =================== */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1.5px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+th{background:#faf5f5;padding:11px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1.5px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
+td{padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fef9f9}
+
+/* =================== BADGES =================== */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-active{background:var(--success-bg);color:var(--success)}
+.badge-inactive{background:#f1efe8;color:#5f5e5a}
+.badge-pending{background:var(--warn-bg);color:var(--warn)}
+.badge-scheduled{background:var(--info-bg);color:var(--info)}
+.badge-completed{background:var(--success-bg);color:var(--success)}
+.badge-cancelled{background:var(--red-light);color:var(--red)}
+.badge-morning{background:#e6f1fb;color:#185fa5}
+.badge-evening{background:#faeeda;color:#ba7517}
+.badge-night{background:#eeedfe;color:#534ab7}
+
+/* =================== MODAL =================== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(26,5,8,0.55);
+  display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:#fff;border-radius:var(--radius-lg);padding:32px;
+  width:100%;max-width:520px;max-height:90vh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-header h3{font-size:18px;font-weight:600;color:var(--text)}
+.modal-close{
+  background:none;border:none;cursor:pointer;font-size:22px;
+  color:var(--text3);padding:4px;transition:color .15s;
+}
+.modal-close:hover{color:var(--red)}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:20px;border-top:1.5px solid var(--border)}
+
+/* =================== CRED BOX =================== */
+.cred-box{
+  background:#faf5f5;border:1.5px dashed rgba(192,21,42,0.3);
+  border-radius:10px;padding:16px;margin-bottom:20px;
+}
+.cred-box h4{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--red-dark);margin-bottom:10px}
+.cred-item{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.cred-item span{color:var(--text3);width:70px;flex-shrink:0}
+.cred-item code{
+  background:#fff;border:1px solid var(--border);border-radius:5px;
+  padding:3px 8px;font-size:12px;color:var(--red-dark);cursor:pointer;
+  transition:background .15s;
+}
+.cred-item code:hover{background:var(--red-light)}
+
+/* =================== CHAT =================== */
+.chat-box{
+  background:#faf5f5;border:1.5px solid var(--border);border-radius:var(--radius-lg);
+  min-height:320px;max-height:400px;overflow-y:auto;padding:16px;
+  display:flex;flex-direction:column;gap:10px;margin-bottom:12px;
+}
+.chat-msg{max-width:75%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.chat-msg.mine{align-self:flex-end;background:var(--red);color:#fff;border-bottom-right-radius:3px}
+.chat-msg.theirs{align-self:flex-start;background:#fff;color:var(--text);border:1px solid var(--border);border-bottom-left-radius:3px}
+.chat-msg .msg-time{font-size:10px;opacity:.6;margin-top:4px}
+.chat-input-row{display:flex;gap:10px}
+.chat-input-row input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
+.chat-input-row input:focus{border-color:var(--red)}
+
+/* =================== HEALTH TRACK =================== */
+.track-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.track-card{
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:16px;text-align:center;cursor:pointer;transition:all .15s;
+}
+.track-card:hover{border-color:var(--red);box-shadow:var(--shadow)}
+.track-card .tc-icon{font-size:28px;margin-bottom:8px}
+.track-card .tc-val{font-size:22px;font-weight:700;color:var(--red)}
+.track-card .tc-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+
+/* =================== TABS =================== */
+.tabs{display:flex;gap:4px;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:20px}
+.tab-btn{
+  flex:1;padding:9px;border-radius:7px;border:none;background:none;
+  font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);
+  transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.tab-btn.active{background:#fff;color:var(--red);box-shadow:var(--shadow)}
+
+/* =================== VITAL CARD =================== */
+.vital-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.vital-item{
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px;text-align:center;
+}
+.vital-item .v-label{font-size:11px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.vital-item .v-val{font-size:20px;font-weight:700;color:var(--text)}
+.vital-item .v-unit{font-size:11px;color:var(--text3)}
+
+/* =================== TOAST =================== */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  display:flex;flex-direction:column;gap:10px;pointer-events:none;
+}
+.toast-item{
+  background:#1a0508;color:#fff;padding:12px 20px;border-radius:10px;
+  font-size:13px;max-width:320px;box-shadow:var(--shadow-lg);
+  animation:slideIn .25s ease;pointer-events:none;border-left:3px solid var(--red);
+}
+.toast-item.success{border-left-color:#0f6e56}
+.toast-item.info{border-left-color:#185fa5}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Panel selector */
+.panel-selector{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:16px;
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
+}
+.ps-btn{
+  padding:7px 16px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;font-size:13px;cursor:pointer;color:var(--text2);
+  transition:all .15s;font-family:'DM Sans',sans-serif;font-weight:500;
+}
+.ps-btn:hover,.ps-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+
+.section{display:none}
+.section.active{display:block}
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+
+/* Prescription card */
+.presc-card{
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px;margin-bottom:12px;
+}
+.presc-card h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.presc-card .meta{font-size:12px;color:var(--text3);margin-bottom:12px}
+.medicine-row{
+  display:flex;align-items:flex-start;gap:12px;padding:10px 0;
+  border-top:1px solid var(--border);
+}
+.medicine-row .med-name{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.medicine-row .med-detail{font-size:12px;color:var(--text3)}
+
+/* Appointment token */
+.token-card{
+  background:var(--red-light);border:2px solid rgba(192,21,42,0.25);
+  border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:16px;
+  margin-bottom:12px;
+}
+.token-num{
+  width:50px;height:50px;background:var(--red);color:#fff;
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;flex-shrink:0;
+}
+.token-info h4{font-size:14px;font-weight:600;color:var(--text)}
+.token-info p{font-size:12px;color:var(--text2);margin-top:2px}
+.token-actions{margin-left:auto;display:flex;gap:8px}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{width:200px}
+  .content-area{padding:16px}
+  .form-row{grid-template-columns:1fr}
+  .hero h1{font-size:32px}
+  .panel-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  .sidebar{display:none}
+  .landing-nav{padding:14px 20px}
+  .panel-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- =================== LANDING PAGE =================== -->
+<div id="landing" class="cross-bg">
+  <nav class="landing-nav">
+    <div class="logo">
+      <div class="logo-cross"></div>
+      <div>
+        <div class="logo-text">Medicare HMS</div>
+        <span class="logo-sub">Hospital Management System</span>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--text3)">Select your panel to continue</div>
+  </nav>
+  <div class="hero">
+    <h1>Welcome to <span>Medicare</span><br>HMS Portal</h1>
+    <p>A complete hospital management system. Choose your panel below to log in and access your dashboard.</p>
+    <div class="panel-grid">
+      <div class="panel-card" onclick="showLogin('patient')">
+        <div class="panel-icon" style="background:#fbeaea;color:var(--red)">🏥</div>
+        <h3>Patient Panel</h3>
+        <p>Book appointments, view prescriptions & lab reports</p>
+        <div class="cred-badge">Register to get started<br>or use existing account</div>
+      </div>
+      <div class="panel-card" onclick="showLogin('admin')">
+        <div class="panel-icon" style="background:#e6f1fb;color:#185fa5">⚙️</div>
+        <h3>Admin Panel</h3>
+        <p>Manage entire hospital — staff, beds, revenue & more</p>
+        <div class="cred-badge">📧 admin@medicare.com<br>🔑 Admin@2024</div>
+      </div>
+      <div class="panel-card" onclick="showLogin('doctor')">
+        <div class="panel-icon" style="background:#e1f5ee;color:#0f6e56">👨‍⚕️</div>
+        <h3>Doctor Panel</h3>
+        <p>View appointments, write prescriptions & manage patients</p>
+        <div class="cred-badge">📧 dr.sharma@medicare.com<br>🔑 Doctor@2024</div>
+      </div>
+      <div class="panel-card" onclick="showLogin('nurse')">
+        <div class="panel-icon" style="background:#faeeda;color:#ba7517">💊</div>
+        <h3>Nurse Panel</h3>
+        <p>Manage medication schedules & patient vitals</p>
+        <div class="cred-badge">📧 nurse.sunita@medicare.com<br>🔑 Nurse@2024</div>
+      </div>
+      <div class="panel-card" onclick="showLogin('receptionist')">
+        <div class="panel-icon" style="background:#eeedfe;color:#534ab7">🗂️</div>
+        <h3>Receptionist Panel</h3>
+        <p>Register patients, book appointments & manage billing</p>
+        <div class="cred-badge">📧 reception@medicare.com<br>🔑 Recept@2024</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== LOGIN PAGE =================== -->
+<div id="loginPage" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px;position:relative;" class="cross-bg">
+  <button class="back-btn" onclick="showLanding()">← Back</button>
+  <div class="login-box">
+    <div id="loginHeader"></div>
+    <div id="loginCredBox"></div>
+    <div id="loginAlert"></div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="loginEmail" placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="registerFields" style="display:none">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" id="regAge" placeholder="Age" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Mobile</label>
+          <input type="tel" id="regMobile" placeholder="Mobile number">
+        </div>
+        <div class="form-group">
+          <label>Blood Group</label>
+          <select id="regBlood">
+            <option value="">Select</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="loginBtn" onclick="doLogin()">Sign In</button>
+    <div id="loginToggle" style="display:none;text-align:center;margin-top:16px;font-size:13px;color:var(--text3)">
+      Don't have an account? <a href="#" style="color:var(--red)" onclick="toggleRegister(event)">Register here</a>
+    </div>
+  </div>
+</div>
+
+<!-- =================== APP PAGE =================== -->
+<div id="appPage" style="display:none;flex-direction:row">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-cross"></div>
+      <div>
+        <div class="logo-text">Medicare</div>
+        <span class="logo-sub" style="color:rgba(255,255,255,0.4);font-size:10px;letter-spacing:1.5px">HMS PORTAL</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-name" id="sidebarName">Loading...</div>
+      <div class="user-role" id="sidebarRole">Role</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">⏻ Sign Out</button>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Welcome back</p>
+      </div>
+      <div id="pageActions"></div>
+    </div>
+    <div class="content-area" id="contentArea"></div>
+  </div>
+</div>
+
+<!-- =================== MODAL =================== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modalBox">
+    <div class="modal-header">
+      <h3 id="modalTitle">Modal</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// API CONFIG — change this to your server URL
+// ============================================================
+const API_BASE = 'http://localhost/hms/api.php';   // ← update to your server path
+
+// ============================================================
+// API CLIENT — replaces localStorage
+// ============================================================
+const API = {
+  _token: localStorage.getItem('hms_token') || null,
+
+  setToken(t) { this._token = t; if(t) localStorage.setItem('hms_token',t); else localStorage.removeItem('hms_token'); },
+
+  async req(method, endpoint, body=null, params={}) {
+    // Build URL supporting PATH_INFO: api.php/resource or api.php/resource/id
+    const parts = endpoint.split('/');
+    const resource = parts[0];
+    const subId = parts[1] || null;
+    let urlStr = API_BASE + '/' + resource;
+    if (subId) urlStr += '/' + subId;
+    const url = new URL(urlStr);
+    Object.entries(params).forEach(([k,v]) => url.searchParams.append(k,v));
+    const opts = {
+      method,
+      headers: { 'Content-Type':'application/json', ...(this._token?{'Authorization':'Bearer '+this._token}:{}) }
+    };
+    if (body) opts.body = JSON.stringify(body);
+    try {
+      const res = await fetch(url.toString(), opts);
+      const data = await res.json();
+      return data;
+    } catch(e) {
+      console.error('API error', e);
+      return { success: false, error: e.message };
+    }
+  },
+
+  get(ep, params={})      { return this.req('GET',    ep, null, params); },
+  post(ep, body)           { return this.req('POST',   ep, body); },
+  put(ep, body)            { return this.req('PUT',    ep, body); },
+  del(ep)                  { return this.req('DELETE', ep); },
+};
+
+// ============================================================
+// DATA STORE — localStorage fallback (offline / demo mode)
+// Falls back to localStorage if API_BASE returns errors
+// ============================================================
+const DB = {
+  get(k){try{return JSON.parse(localStorage.getItem('mhms_'+k)||'null')}catch{return null}},
+  set(k,v){localStorage.setItem('mhms_'+k,JSON.stringify(v))},
+  del(k){localStorage.removeItem('mhms_'+k)},
+
+  // API-synced helpers (async)
+  async fetchAndCache(resource, params={}) {
+    const r = await API.get(resource, params);
+    if (r && r.success) { this.set(resource, r.data); return r.data; }
+    return this.get(resource) || [];   // fallback to local cache
+  },
+  async pushCreate(resource, body) {
+    const r = await API.post(resource, body);
+    if (r && r.success) return r;
+    return null;
+  },
+  async pushUpdate(resource, id, body) {
+    const r = await API.put(resource+'/'+id, body);
+    if (r && r.success) return r;
+    return null;
+  },
+};
+
+function initDB(){
+  if(!DB.get('init_v4')){
+    DB.set('doctors',[
+      {id:1,name:'Dr. Aditya Sharma',email:'dr.sharma@medicare.com',password:'Doctor@2024',specialization:'Cardiology',department:'Cardiology',qualification:'MBBS, MD Cardiology',experience:12,mobile:'9876543210',fee:500,days:'Mon,Tue,Wed,Thu,Fri',status:'active',joined:'2020-01-15'},
+      {id:2,name:'Dr. Priya Nair',email:'dr.nair@medicare.com',password:'Doctor@2024',specialization:'Neurology',department:'Neurology',qualification:'MBBS, DM Neurology',experience:8,mobile:'9876543211',fee:600,days:'Mon,Wed,Fri',status:'active',joined:'2021-03-10'},
+      {id:3,name:'Dr. Ramesh Gupta',email:'dr.gupta@medicare.com',password:'Doctor@2024',specialization:'Orthopedics',department:'Orthopedics',qualification:'MBBS, MS Ortho',experience:15,mobile:'9876543212',fee:450,days:'Tue,Thu,Sat',status:'active',joined:'2019-06-01'},
+    ]);
+    DB.set('nurses',[
+      {id:1,name:'Nurse Sunita Devi',email:'nurse.sunita@medicare.com',password:'Nurse@2024',ward:'General Ward',shift:'Morning',mobile:'9123456789',status:'active',joined:'2022-02-01'},
+      {id:2,name:'Nurse Kavitha Rao',email:'nurse.kavitha@medicare.com',password:'Nurse@2024',ward:'ICU',shift:'Evening',mobile:'9123456790',status:'active',joined:'2022-05-15'},
+    ]);
+    DB.set('receptionists',[
+      {id:1,name:'Meena Patel',email:'reception@medicare.com',password:'Recept@2024',mobile:'9988776655',shift:'Morning',status:'active',joined:'2023-01-10'},
+    ]);
+    DB.set('patients',[
+      {id:1,name:'Ravi Kumar',age:35,mobile:'9001234567',email:'ravi@email.com',password:'Patient@123',gender:'Male',blood:'O+',address:'Bengaluru',emergency:'9001234568',joined:'2024-01-10'},
+      {id:2,name:'Anjali Singh',age:28,mobile:'9001234568',email:'anjali@email.com',password:'Patient@123',gender:'Female',blood:'A+',address:'Mumbai',emergency:'9001234569',joined:'2024-02-15'},
+    ]);
+    DB.set('appointments',[
+      {id:1,patientId:1,doctorId:1,date:today(),time:'10:00',token:1,status:'scheduled',reason:'Chest pain',type:'in-person',createdBy:'patient'},
+      {id:2,patientId:2,doctorId:2,date:today(),time:'11:00',token:2,status:'completed',reason:'Headache',type:'in-person',createdBy:'receptionist'},
+    ]);
+    DB.set('prescriptions',[
+      {id:1,patientId:2,doctorId:2,appointmentId:2,diagnosis:'Tension Headache',notes:'Rest and avoid screen time',followUp:nextDate(7),date:today(),medicines:[
+        {name:'Paracetamol 500mg',dosage:'1 tablet',frequency:'Twice daily',duration:'5 days',instructions:'After meals'},
+        {name:'Ibuprofen 400mg',dosage:'1 tablet',frequency:'Once daily',duration:'3 days',instructions:'With food'}
+      ]}
+    ]);
+    DB.set('labReports',[
+      {id:1,patientId:2,doctorId:2,test:'CBC (Complete Blood Count)',date:today(),result:'WBC: 7200, RBC: 4.5M, Hb: 13.5g/dL',range:'WBC: 4000-11000',status:'completed',remarks:'Normal range'}
+    ]);
+    DB.set('bills',[
+      {id:1,patientId:2,appointmentId:2,total:1200,paid:1200,discount:0,status:'paid',method:'Cash',invoice:'INV-20240215-001',date:today(),items:[
+        {desc:'Consultation Fee',qty:1,price:600,total:600},
+        {desc:'Lab Tests',qty:1,price:600,total:600}
+      ]}
+    ]);
+    DB.set('vitals',[
+      {id:1,patientId:2,nurseId:1,bp:'120/80',temp:98.6,pulse:72,rr:16,spo2:98,weight:58,height:162,notes:'Normal',date:today()}
+    ]);
+    DB.set('beds',[
+      {id:1,num:'A-101',ward:'General Ward',type:'General',status:'available',patientId:null},
+      {id:2,num:'A-102',ward:'General Ward',type:'General',status:'occupied',patientId:1},
+      {id:3,num:'B-201',ward:'ICU',type:'ICU',status:'available',patientId:null},
+      {id:4,num:'C-301',ward:'Private',type:'Private',status:'available',patientId:null},
+    ]);
+    DB.set('medicines',[
+      {id:1,name:'Paracetamol 500mg',generic:'Acetaminophen',cat:'Analgesic',unit:'Tablet',stock:500,reorder:50,price:2.5,expiry:'2026-12-31'},
+      {id:2,name:'Amoxicillin 250mg',generic:'Amoxicillin',cat:'Antibiotic',unit:'Capsule',stock:200,reorder:30,price:8,expiry:'2026-06-30'},
+      {id:3,name:'Metformin 500mg',generic:'Metformin HCl',cat:'Antidiabetic',unit:'Tablet',stock:350,reorder:40,price:5,expiry:'2026-09-30'},
+      {id:4,name:'Ibuprofen 400mg',generic:'Ibuprofen',cat:'NSAID',unit:'Tablet',stock:15,reorder:50,price:4,expiry:'2025-12-31'},
+    ]);
+    DB.set('departments',[
+      {id:1,name:'Cardiology',desc:'Heart care',floor:2,total:20,available:14,head:1},
+      {id:2,name:'Neurology',desc:'Brain & nervous system',floor:3,total:15,available:9,head:2},
+      {id:3,name:'Orthopedics',desc:'Bone & joint care',floor:2,total:18,available:12,head:3},
+      {id:4,name:'Emergency',desc:'Emergency care',floor:0,total:10,available:3,head:null},
+      {id:5,name:'Pediatrics',desc:'Child healthcare',floor:1,total:25,available:18,head:null},
+    ]);
+    DB.set('medications',[
+      {id:1,patientId:2,nurseId:1,medicine:'Paracetamol 500mg',dosage:'1 tab',time:'08:00',date:today(),given:false,notes:''},
+      {id:2,patientId:2,nurseId:1,medicine:'Ibuprofen 400mg',dosage:'1 tab',time:'14:00',date:today(),given:true,notes:'Given on time'},
+    ]);
+    DB.set('instructions',[
+      {id:1,patientId:2,doctorId:2,instruction:'Monitor blood pressure every 2 hours',priority:'high',status:'pending',date:today()},
+    ]);
+    DB.set('messages',[
+      {id:1,fromType:'patient',fromId:2,toType:'doctor',toId:2,msg:'Doctor, I have been feeling dizzy since morning.',time:today()+' 09:15'},
+      {id:2,fromType:'doctor',fromId:2,toType:'patient',toId:2,msg:'Please rest and take the prescribed medication. If dizziness persists, come in immediately.',time:today()+' 09:45'},
+    ]);
+    DB.set('health',[
+      {id:1,patientId:1,date:today(),steps:7200,water:2.1,sleep:7.5,exercise:30,calories:1800,mood:'Good'},
+    ]);
+    DB.set('init_v4',true);
+  }
+}
+
+function today(){return new Date().toISOString().slice(0,10)}
+function nextDate(d){const dt=new Date();dt.setDate(dt.getDate()+d);return dt.toISOString().slice(0,10)}
+function nextId(arr){return arr.length>0?Math.max(...arr.map(x=>x.id))+1:1}
+function formatDate(d){if(!d)return'-';const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
+function formatTime(t){if(!t)return'-';const[h,m]=t.split(':');const hr=parseInt(h);return `${hr>12?hr-12:hr||12}:${m} ${hr>=12?'PM':'AM'}`}
+
+// ============================================================
+// AUTH STATE
+// ============================================================
+let currentUser = null;
+let currentPanel = null;
+let isRegisterMode = false;
+
+function showLanding(){
+  document.getElementById('landing').style.display='flex';
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('appPage').style.display='none';
+  document.getElementById('loginAlert').innerHTML='';
+}
+
+function showLogin(panel){
+  currentPanel=panel;
+  document.getElementById('landing').style.display='none';
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('loginEmail').value='';
+  document.getElementById('loginPassword').value='';
+  document.getElementById('loginAlert').innerHTML='';
+  isRegisterMode=false;
+  document.getElementById('registerFields').style.display='none';
+
+  const configs={
+    patient:{title:'Patient Login',sub:'Access your health records & appointments',showReg:true,cred:null},
+    admin:{title:'Admin Login',sub:'Full hospital management access',showReg:false,cred:{email:'admin@medicare.com',pass:'Admin@2024'}},
+    doctor:{title:'Doctor Login',sub:'Access your appointments & patient records',showReg:false,cred:{email:'dr.sharma@medicare.com',pass:'Doctor@2024',note:'Other doctors have same password'}},
+    nurse:{title:'Nurse Login',sub:'Manage patient care & medication schedules',showReg:false,cred:{email:'nurse.sunita@medicare.com',pass:'Nurse@2024',note:'Other nurses have same password'}},
+    receptionist:{title:'Receptionist Login',sub:'Patient registration & appointment booking',showReg:false,cred:{email:'reception@medicare.com',pass:'Recept@2024'}},
+  };
+  const cfg=configs[panel];
+  document.getElementById('loginHeader').innerHTML=`
+    <h2>${cfg.title}</h2><p style="font-size:13px;color:var(--text3);margin-bottom:${cfg.cred?'12px':'24px'}">${cfg.sub}</p>
+  `;
+  if(cfg.cred){
+    document.getElementById('loginCredBox').innerHTML=`
+      <div class="cred-box">
+        <h4>🔑 Demo Credentials</h4>
+        <div class="cred-item"><span>Email</span><code onclick="fillCred('${cfg.cred.email}','')">${cfg.cred.email}</code></div>
+        <div class="cred-item"><span>Password</span><code onclick="fillCred('','${cfg.cred.pass}')">${cfg.cred.pass}</code></div>
+        ${cfg.cred.note?`<div style="font-size:11px;color:var(--text3);margin-top:6px">ℹ️ ${cfg.cred.note}</div>`:''}
+        <button class="btn btn-outline btn-sm" style="margin-top:10px;width:100%" onclick="fillCred('${cfg.cred.email}','${cfg.cred.pass}')">Auto-fill credentials</button>
+      </div>
+    `;
+  } else {
+    document.getElementById('loginCredBox').innerHTML='';
+  }
+  document.getElementById('loginToggle').style.display=cfg.showReg?'block':'none';
+  document.getElementById('loginBtn').textContent='Sign In';
+}
+
+function fillCred(email,pass){
+  if(email)document.getElementById('loginEmail').value=email;
+  if(pass)document.getElementById('loginPassword').value=pass;
+}
+
+function toggleRegister(e){
+  e.preventDefault();
+  isRegisterMode=!isRegisterMode;
+  document.getElementById('registerFields').style.display=isRegisterMode?'block':'none';
+  document.getElementById('loginBtn').textContent=isRegisterMode?'Create Account':'Sign In';
+  document.querySelector('#loginToggle a').textContent=isRegisterMode?'Back to Sign In':'Register here';
+  document.querySelector('#loginToggle').innerHTML=isRegisterMode
+    ?'Already have account? <a href="#" style="color:var(--red)" onclick="toggleRegister(event)">Sign In</a>'
+    :'Don\'t have an account? <a href="#" style="color:var(--red)" onclick="toggleRegister(event)">Register here</a>';
+}
+
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  const alertEl=document.getElementById('loginAlert');
+  alertEl.innerHTML='';
+  const loginBtn=document.getElementById('loginBtn');
+
+  // ---- REGISTER (patient only) ----
+  if(currentPanel==='patient' && isRegisterMode){
+    const name=document.getElementById('regName').value.trim();
+    const age=document.getElementById('regAge').value;
+    const mobile=document.getElementById('regMobile').value.trim();
+    const blood=document.getElementById('regBlood').value;
+    if(!name||!age||!mobile||!email||!pass){alertEl.innerHTML='<div class="alert alert-error">Please fill all fields</div>';return}
+    loginBtn.textContent='Creating account…'; loginBtn.disabled=true;
+    // Try API first
+    const r = await API.post('patients',{name,age:parseInt(age),mobile,email,password:pass,blood_group:blood,joined_date:today()});
+    if(r && r.success){
+      // Now login
+      const lr = await API.post('login',{role:'patient',email,password:pass});
+      if(lr && lr.success){ API.setToken(lr.token); currentUser={...lr.user}; showApp(); return; }
+    }
+    // Fallback: localStorage
+    const patients=DB.get('patients')||[];
+    if(patients.find(p=>p.email===email)){alertEl.innerHTML='<div class="alert alert-error">Email already registered</div>';loginBtn.textContent='Create Account';loginBtn.disabled=false;return;}
+    const newP={id:nextId(patients),name,age:parseInt(age),mobile,email,password:pass,gender:'',blood:blood||'',address:'',emergency:'',joined:today()};
+    patients.push(newP);DB.set('patients',patients);
+    currentUser={...newP,role:'patient'};
+    loginBtn.textContent='Create Account';loginBtn.disabled=false;
+    showApp();return;
+  }
+
+  if(!email||!pass){alertEl.innerHTML='<div class="alert alert-error">Please enter email and password</div>';return}
+  loginBtn.textContent='Signing in…'; loginBtn.disabled=true;
+
+  // ---- TRY API LOGIN ----
+  const apiResult = await API.post('login',{role:currentPanel,email,password:pass});
+  if(apiResult && apiResult.success){
+    API.setToken(apiResult.token);
+    currentUser={...apiResult.user};
+    loginBtn.textContent='Sign In'; loginBtn.disabled=false;
+    showApp(); return;
+  }
+
+  // ---- FALLBACK: localStorage login ----
+  loginBtn.textContent='Sign In'; loginBtn.disabled=false;
+
+  if(currentPanel==='admin'){
+    if(email==='admin@medicare.com'&&pass==='Admin@2024'){
+      currentUser={id:0,name:'Super Admin',email,role:'admin'};showApp();return;
+    }
+    alertEl.innerHTML='<div class="alert alert-error">Invalid credentials</div>';return;
+  }
+  if(currentPanel==='doctor'){
+    const docs=DB.get('doctors')||[];
+    const doc=docs.find(d=>d.email===email&&d.password===pass&&d.status==='active');
+    if(doc){currentUser={...doc,role:'doctor'};showApp();return;}
+    alertEl.innerHTML='<div class="alert alert-error">Invalid credentials. Check demo credentials above.</div>';return;
+  }
+  if(currentPanel==='nurse'){
+    const nurses=DB.get('nurses')||[];
+    const nurse=nurses.find(n=>n.email===email&&n.password===pass&&n.status==='active');
+    if(nurse){currentUser={...nurse,role:'nurse'};showApp();return;}
+    alertEl.innerHTML='<div class="alert alert-error">Invalid credentials. Check demo credentials above.</div>';return;
+  }
+  if(currentPanel==='receptionist'){
+    const recs=DB.get('receptionists')||[];
+    const rec=recs.find(r=>r.email===email&&r.password===pass&&r.status==='active');
+    if(rec){currentUser={...rec,role:'receptionist'};showApp();return;}
+    alertEl.innerHTML='<div class="alert alert-error">Invalid credentials</div>';return;
+  }
+  if(currentPanel==='patient'){
+    const patients=DB.get('patients')||[];
+    const pt=patients.find(p=>p.email===email&&p.password===pass);
+    if(pt){currentUser={...pt,role:'patient'};showApp();return;}
+    alertEl.innerHTML='<div class="alert alert-error">Invalid credentials. Try registering first.</div>';return;
+  }
+}
+
+function doLogout(){
+  API.setToken(null);
+  currentUser=null;currentPanel=null;showLanding();
+}
+
+// ============================================================
+// API SYNC — pre-load all data from backend into localStorage cache
+// ============================================================
+async function syncFromAPI(){
+  if(!API._token) return;
+  const resources=['patients','doctors','nurses','receptionists','departments','beds','medicines'];
+  for(const r of resources){
+    try { await DB.fetchAndCache(r); } catch(e){}
+  }
+  try { await DB.fetchAndCache('appointments',{date:today()}); } catch(e){}
+  try { await DB.fetchAndCache('bills'); } catch(e){}
+  try { await DB.fetchAndCache('lab_reports'); } catch(e){}
+  try { await DB.fetchAndCache('prescriptions'); } catch(e){}
+  try { await DB.fetchAndCache('vitals'); } catch(e){}
+  try { await DB.fetchAndCache('medications',{date:today()}); } catch(e){}
+  try { await DB.fetchAndCache('instructions'); } catch(e){}
+  try { await DB.fetchAndCache('messages'); } catch(e){}
+  try { await DB.fetchAndCache('health'); } catch(e){}
+}
+
+// ============================================================
+// APP
+// ============================================================
+function showApp(){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('appPage').style.display='flex';
+  document.getElementById('sidebarName').textContent=currentUser.name;
+  document.getElementById('sidebarRole').textContent=roleLabel(currentUser.role);
+  buildSidebar();
+  navTo(getDefaultNav());
+  // Sync data from MySQL backend in background
+  syncFromAPI().then(()=>{ navTo(getDefaultNav()); }).catch(()=>{});
+}
+
+function roleLabel(r){return{patient:'Patient',admin:'Administrator',doctor:'Doctor',nurse:'Nurse',receptionist:'Receptionist'}[r]||r}
+
+function getDefaultNav(){
+  return{patient:'dashboard',admin:'dashboard',doctor:'dashboard',nurse:'dashboard',receptionist:'dashboard'}[currentUser.role];
+}
+
+function buildSidebar(){
+  const navs={
+    admin:[
+      {label:'Dashboard',icon:'🏠',key:'dashboard'},
+      {label:'Patients',icon:'👥',key:'patients'},
+      {label:'Doctors',icon:'👨‍⚕️',key:'doctors'},
+      {label:'Nurses',icon:'💊',key:'nurses'},
+      {label:'Receptionists',icon:'🗂️',key:'receptionists'},
+      {label:'Appointments',icon:'📅',key:'appointments'},
+      {label:'Departments',icon:'🏢',key:'departments'},
+      {label:'Bed Management',icon:'🛏️',key:'beds'},
+      {label:'Pharmacy',icon:'💉',key:'pharmacy'},
+      {label:'Lab Reports',icon:'🔬',key:'labReports'},
+      {label:'Billing',icon:'💳',key:'billing'},
+    ],
+    patient:[
+      {label:'Dashboard',icon:'🏠',key:'dashboard'},
+      {label:'Book Appointment',icon:'📅',key:'bookAppointment'},
+      {label:'My Appointments',icon:'🗓️',key:'myAppointments'},
+      {label:'Prescriptions',icon:'💊',key:'prescriptions'},
+      {label:'Lab Reports',icon:'🔬',key:'labReports'},
+      {label:'Bills',icon:'💳',key:'bills'},
+      {label:'Doctor Chat',icon:'💬',key:'chat'},
+      {label:'Health Tracking',icon:'❤️',key:'healthTracking'},
+      {label:'Vitals',icon:'📊',key:'vitals'},
+    ],
+    doctor:[
+      {label:'Dashboard',icon:'🏠',key:'dashboard'},
+      {label:'Today\'s Schedule',icon:'📅',key:'schedule'},
+      {label:'All Patients',icon:'👥',key:'patients'},
+      {label:'Prescriptions',icon:'💊',key:'prescriptions'},
+      {label:'Lab Reports',icon:'🔬',key:'labReports'},
+      {label:'Instructions',icon:'📋',key:'instructions'},
+      {label:'Patient Chat',icon:'💬',key:'chat'},
+    ],
+    nurse:[
+      {label:'Dashboard',icon:'🏠',key:'dashboard'},
+      {label:'Assigned Patients',icon:'👥',key:'patients'},
+      {label:'Medication Schedule',icon:'💊',key:'medications'},
+      {label:'Record Vitals',icon:'📊',key:'vitals'},
+      {label:'Bed Management',icon:'🛏️',key:'beds'},
+      {label:'Doctor Instructions',icon:'📋',key:'instructions'},
+    ],
+    receptionist:[
+      {label:'Dashboard',icon:'🏠',key:'dashboard'},
+      {label:'Register Patient',icon:'👤',key:'registerPatient'},
+      {label:'Appointments',icon:'📅',key:'appointments'},
+      {label:'Token Management',icon:'🎟️',key:'tokens'},
+      {label:'Billing',icon:'💳',key:'billing'},
+      {label:'Doctor Availability',icon:'👨‍⚕️',key:'doctors'},
+    ],
+  };
+  const items=navs[currentUser.role]||[];
+  document.getElementById('sidebarNav').innerHTML=items.map(n=>`
+    <div class="nav-item" id="nav_${n.key}" onclick="navTo('${n.key}')">
+      <span>${n.icon}</span><span>${n.label}</span>
+    </div>
+  `).join('');
+}
+
+function navTo(key){
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('nav_'+key);
+  if(el)el.classList.add('active');
+  renderPage(key);
+}
+
+function renderPage(key){
+  const titles={
+    dashboard:'Dashboard',patients:'Patients',doctors:'Doctors',nurses:'Nurses',
+    receptionists:'Receptionists',appointments:'Appointments',departments:'Departments',
+    beds:'Bed Management',pharmacy:'Pharmacy',labReports:'Lab Reports',billing:'Billing',
+    bookAppointment:'Book Appointment',myAppointments:'My Appointments',prescriptions:'Prescriptions',
+    bills:'My Bills',chat:'Doctor Chat',healthTracking:'Health Tracking',vitals:'Vitals',
+    schedule:'Today\'s Schedule',instructions:'Instructions',medications:'Medication Schedule',
+    registerPatient:'Register Patient',tokens:'Token Management',
+  };
+  document.getElementById('pageTitle').textContent=titles[key]||key;
+  document.getElementById('pageSubtitle').textContent=`${roleLabel(currentUser.role)} — ${currentUser.name}`;
+  document.getElementById('pageActions').innerHTML='';
+  const role=currentUser.role;
+  if(role==='admin') renderAdmin(key);
+  else if(role==='patient') renderPatient(key);
+  else if(role==='doctor') renderDoctor(key);
+  else if(role==='nurse') renderNurse(key);
+  else if(role==='receptionist') renderReceptionist(key);
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  const d=document.createElement('div');
+  d.className='toast-item '+(type);
+  d.textContent=msg;
+  t.appendChild(d);
+  setTimeout(()=>d.remove(),3000);
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(title,body,footer=''){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modalFooter').innerHTML=footer;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
+function closeModalOutside(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
+
+// ============================================================
+// =================== ADMIN PANEL ===================
+// ============================================================
+function renderAdmin(key){
+  const ca=document.getElementById('contentArea');
+  const pa=document.getElementById('pageActions');
+  if(key==='dashboard') renderAdminDashboard();
+  else if(key==='doctors') renderAdminDoctors();
+  else if(key==='nurses') renderAdminNurses();
+  else if(key==='receptionists') renderAdminReceptionists();
+  else if(key==='patients') renderAdminPatients();
+  else if(key==='appointments') renderAdminAppointments();
+  else if(key==='departments') renderAdminDepartments();
+  else if(key==='beds') renderAdminBeds();
+  else if(key==='pharmacy') renderAdminPharmacy();
+  else if(key==='labReports') renderAdminLabs();
+  else if(key==='billing') renderAdminBilling();
+}
+
+function renderAdminDashboard(){
+  const patients=DB.get('patients')||[];
+  const doctors=DB.get('doctors')||[];
+  const nurses=DB.get('nurses')||[];
+  const appts=DB.get('appointments')||[];
+  const bills=DB.get('bills')||[];
+  const beds=DB.get('beds')||[];
+  const todayAppts=appts.filter(a=>a.date===today());
+  const revenue=bills.reduce((s,b)=>s+b.paid,0);
+  const availBeds=beds.filter(b=>b.status==='available').length;
+  const lowStock=(DB.get('medicines')||[]).filter(m=>m.stock<=m.reorder);
+
+  document.getElementById('contentArea').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card red"><div class="stat-icon">👥</div><div class="stat-label">Total Patients</div><div class="stat-value">${patients.length}</div></div>
+      <div class="stat-card green"><div class="stat-icon">👨‍⚕️</div><div class="stat-label">Active Doctors</div><div class="stat-value">${doctors.filter(d=>d.status==='active').length}</div></div>
+      <div class="stat-card blue"><div class="stat-icon">📅</div><div class="stat-label">Today's Appointments</div><div class="stat-value">${todayAppts.length}</div></div>
+      <div class="stat-card amber"><div class="stat-icon">💰</div><div class="stat-label">Total Revenue</div><div class="stat-value">₹${revenue.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-icon">🛏️</div><div class="stat-label">Available Beds</div><div class="stat-value">${availBeds}</div></div>
+      <div class="stat-card"><div class="stat-icon">💊</div><div class="stat-label">Nurses</div><div class="stat-value">${nurses.filter(n=>n.status==='active').length}</div></div>
+    </div>
+    ${lowStock.length>0?`<div class="alert alert-error" style="margin-bottom:16px">⚠️ Low stock alert: ${lowStock.map(m=>m.name).join(', ')}</div>`:''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card">
+        <div class="card-header"><div><h2>Recent Appointments</h2><p>Today's schedule</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Patient</th><th>Doctor</th><th>Time</th><th>Status</th></tr></thead>
+            <tbody>
+              ${todayAppts.slice(0,5).map(a=>{
+                const pt=(DB.get('patients')||[]).find(p=>p.id===a.patientId);
+                const doc=(DB.get('doctors')||[]).find(d=>d.id===a.doctorId);
+                return `<tr><td>${pt?.name||'—'}</td><td>${doc?.name||'—'}</td><td>${formatTime(a.time)}</td><td><span class="badge badge-${a.status}">${a.status}</span></td></tr>`;
+              }).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--text3)">No appointments today</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div><h2>Department Beds</h2><p>Bed availability</p></div></div>
+        ${(DB.get('departments')||[]).map(d=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">${d.name}</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="height:6px;width:80px;background:var(--border);border-radius:3px;overflow:hidden">
+                <div style="height:100%;width:${Math.round((d.available/d.total)*100)}%;background:var(--red);border-radius:3px"></div>
+              </div>
+              <span style="font-size:12px;color:var(--text3)">${d.available}/${d.total}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminDoctors(){
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addDoctorModal()">+ Add Doctor</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>All Doctors (${doctors.length})</h2><p>Manage medical staff</p></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Password</th><th>Specialization</th><th>Dept</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${doctors.map((d,i)=>`
+              <tr>
+                <td>${i+1}</td>
+                <td><strong>${d.name}</strong><br><span style="font-size:11px;color:var(--text3)">${d.mobile}</span></td>
+                <td style="font-size:12px">${d.email}</td>
+                <td><code style="background:var(--red-light);border:1px solid rgba(192,21,42,0.2);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--red-dark)">${d.password}</code></td>
+                <td>${d.specialization}</td>
+                <td>${d.department}</td>
+                <td>₹${d.fee}</td>
+                <td><span class="badge badge-${d.status}">${d.status}</span></td>
+                <td style="white-space:nowrap">
+                  <button class="btn btn-outline btn-sm" onclick="editDoctorModal(${d.id})">✏️ Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="toggleDoctorStatus(${d.id})" style="margin-left:4px">${d.status==='active'?'🚫 Disable':'✅ Enable'}</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function addDoctorModal(){
+  const deptList=(DB.get('departments')||[]).map(d=>d.name);
+  openModal('Add New Doctor',`
+    <div class="alert alert-info">A demo password will be auto-generated for the new doctor.</div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input type="text" id="mDName" placeholder="Dr. Full Name"></div>
+      <div class="form-group"><label>Mobile *</label><input type="tel" id="mDMobile" placeholder="10-digit mobile"></div>
+    </div>
+    <div class="form-group"><label>Email Address *</label><input type="email" id="mDEmail" placeholder="dr.name@medicare.com"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Specialization *</label><input type="text" id="mDSpec" placeholder="e.g. Cardiology"></div>
+      <div class="form-group"><label>Department *</label><select id="mDDept"><option value="">Select</option>${deptList.map(d=>`<option>${d}</option>`).join('')}<option value="__new">+ Custom</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Qualification</label><input type="text" id="mDQual" placeholder="MBBS, MD etc."></div>
+      <div class="form-group"><label>Experience (Years)</label><input type="number" id="mDExp" min="0" placeholder="0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Consultation Fee (₹)</label><input type="number" id="mDFee" placeholder="500" min="0"></div>
+      <div class="form-group"><label>Available Days</label><input type="text" id="mDDays" placeholder="Mon,Tue,Wed..." value="Mon,Tue,Wed,Thu,Fri"></div>
+    </div>
+    <div class="form-group"><label>Custom Password (leave blank to auto-generate)</label><input type="text" id="mDPass" placeholder="Leave blank to auto-generate"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveNewDoctor()">Add Doctor</button>`);
+}
+
+async function saveNewDoctor(){
+  const name=document.getElementById('mDName').value.trim();
+  const mobile=document.getElementById('mDMobile').value.trim();
+  const email=document.getElementById('mDEmail').value.trim();
+  const spec=document.getElementById('mDSpec').value.trim();
+  const dept=document.getElementById('mDDept').value;
+  const qual=document.getElementById('mDQual').value.trim();
+  const exp=parseInt(document.getElementById('mDExp').value)||0;
+  const fee=parseFloat(document.getElementById('mDFee').value)||0;
+  const days=document.getElementById('mDDays').value.trim();
+  let pass=document.getElementById('mDPass').value.trim();
+
+  if(!name||!email||!spec||!dept){toast('Please fill required fields','');return;}
+  const doctors=DB.get('doctors')||[];
+  if(doctors.find(d=>d.email===email)){toast('Email already exists!','');return;}
+  if(!pass) pass=`Dr@${name.split(' ').pop()}${Math.floor(1000+Math.random()*9000)}`;
+
+  // Find department_id from name
+  const depts=DB.get('departments')||[];
+  const deptObj=depts.find(d=>d.name===dept);
+  const deptId=deptObj?deptObj.id:null;
+
+  // Try API first (saves to MySQL)
+  const r=await API.post('doctors',{name,email,password:pass,specialization:spec,department_id:deptId,qualification:qual,experience_years:exp,mobile,consultation_fee:fee,available_days:days,status:'active',joined_date:today()});
+  if(r&&r.success){
+    // Refresh from server
+    await DB.fetchAndCache('doctors');
+    closeModal();
+    toast(`Doctor added! Email: ${email} | Password: ${pass}`,'success');
+    renderAdminDoctors();
+    return;
+  }
+  // Fallback: localStorage only
+  const newDoc={id:nextId(doctors),name,email,password:pass,specialization:spec,department:dept==='__new'?spec:dept,qualification:qual,experience:exp,mobile,fee,days,status:'active',joined:today()};
+  doctors.push(newDoc);
+  DB.set('doctors',doctors);
+  closeModal();
+  toast(`Doctor added (offline)! Email: ${email} | Password: ${pass}`,'success');
+  renderAdminDoctors();
+}
+
+function editDoctorModal(id){
+  const doctors=DB.get('doctors')||[];
+  const d=doctors.find(x=>x.id===id);
+  if(!d)return;
+  const deptList=(DB.get('departments')||[]).map(x=>x.name);
+  openModal('Edit Doctor — '+d.name,`
+    <div class="cred-box">
+      <h4>Current Login Credentials</h4>
+      <div class="cred-item"><span>Email</span><code>${d.email}</code></div>
+      <div class="cred-item"><span>Password</span><code id="showPass">${d.password}</code></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name</label><input type="text" id="eDName" value="${d.name}"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="eDMobile" value="${d.mobile}"></div>
+    </div>
+    <div class="form-group"><label>Email (Login)</label><input type="email" id="eDEmail" value="${d.email}"></div>
+    <div class="form-group"><label>Password (Login)</label><input type="text" id="eDPass" value="${d.password}"><small style="font-size:11px;color:var(--text3)">Change to update doctor's login password</small></div>
+    <div class="form-row">
+      <div class="form-group"><label>Specialization</label><input type="text" id="eDSpec" value="${d.specialization}"></div>
+      <div class="form-group"><label>Department</label><select id="eDDept">${deptList.map(x=>`<option ${x===d.department?'selected':''}>${x}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Qualification</label><input type="text" id="eDQual" value="${d.qualification}"></div>
+      <div class="form-group"><label>Experience (yrs)</label><input type="number" id="eDExp" value="${d.experience}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Fee (₹)</label><input type="number" id="eDFee" value="${d.fee}"></div>
+      <div class="form-group"><label>Available Days</label><input type="text" id="eDDays" value="${d.days}"></div>
+    </div>
+    <div class="form-group"><label>Status</label><select id="eDStatus"><option value="active" ${d.status==='active'?'selected':''}>Active</option><option value="inactive" ${d.status==='inactive'?'selected':''}>Inactive</option></select></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveEditDoctor(${id})">Save Changes</button>`);
+}
+
+async function saveEditDoctor(id){
+  const body={
+    name:document.getElementById('eDName').value.trim(),
+    mobile:document.getElementById('eDMobile').value.trim(),
+    specialization:document.getElementById('eDSpec').value.trim(),
+    qualification:document.getElementById('eDQual').value.trim(),
+    experience_years:parseInt(document.getElementById('eDExp').value)||0,
+    consultation_fee:parseFloat(document.getElementById('eDFee').value)||0,
+    available_days:document.getElementById('eDDays').value.trim(),
+    status:document.getElementById('eDStatus').value,
+  };
+  // Find department_id
+  const depts=DB.get('departments')||[];
+  const deptName=document.getElementById('eDDept').value;
+  const deptObj=depts.find(d=>d.name===deptName);
+  body.department_id=deptObj?deptObj.id:null;
+
+  // Try API first
+  const r=await API.put('doctors/'+id,body);
+  if(r&&r.success){
+    await DB.fetchAndCache('doctors');
+    closeModal();
+    toast('Doctor updated successfully!','success');
+    renderAdminDoctors();
+    return;
+  }
+  // Fallback: localStorage
+  const doctors=DB.get('doctors')||[];
+  const idx=doctors.findIndex(x=>x.id===id);
+  if(idx===-1)return;
+  doctors[idx]={...doctors[idx],...body,department:deptName,experience:body.experience_years,fee:body.consultation_fee,days:body.available_days};
+  DB.set('doctors',doctors);
+  closeModal();
+  toast('Doctor updated (offline)!','success');
+  renderAdminDoctors();
+}
+
+function toggleDoctorStatus(id){
+  const doctors=DB.get('doctors')||[];
+  const d=doctors.find(x=>x.id===id);
+  if(!d)return;
+  d.status=d.status==='active'?'inactive':'active';
+  DB.set('doctors',doctors);
+  toast(`Doctor ${d.status==='active'?'enabled':'disabled'}`,'');
+  renderAdminDoctors();
+}
+
+function renderAdminNurses(){
+  const nurses=DB.get('nurses')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addNurseModal()">+ Add Nurse</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>All Nurses (${nurses.length})</h2><p>Manage nursing staff</p></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Password</th><th>Ward</th><th>Shift</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${nurses.map((n,i)=>`
+              <tr>
+                <td>${i+1}</td>
+                <td><strong>${n.name}</strong><br><span style="font-size:11px;color:var(--text3)">${n.mobile}</span></td>
+                <td style="font-size:12px">${n.email}</td>
+                <td><code style="background:var(--warn-bg);border:1px solid rgba(186,117,23,0.2);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--warn)">${n.password}</code></td>
+                <td>${n.ward}</td>
+                <td><span class="badge badge-${n.shift.toLowerCase()}">${n.shift}</span></td>
+                <td><span class="badge badge-${n.status}">${n.status}</span></td>
+                <td style="white-space:nowrap">
+                  <button class="btn btn-outline btn-sm" onclick="editNurseModal(${n.id})">✏️ Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="toggleNurseStatus(${n.id})" style="margin-left:4px">${n.status==='active'?'🚫 Disable':'✅ Enable'}</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function addNurseModal(){
+  openModal('Add New Nurse',`
+    <div class="alert alert-info">A demo password will be auto-generated for the new nurse.</div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input type="text" id="mNName" placeholder="Nurse Full Name"></div>
+      <div class="form-group"><label>Mobile *</label><input type="tel" id="mNMobile" placeholder="10-digit mobile"></div>
+    </div>
+    <div class="form-group"><label>Email Address *</label><input type="email" id="mNEmail" placeholder="nurse.name@medicare.com"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Ward *</label><select id="mNWard"><option value="">Select Ward</option><option>General Ward</option><option>ICU</option><option>Private</option><option>Pediatric Ward</option><option>Maternity Ward</option><option>Emergency</option></select></div>
+      <div class="form-group"><label>Shift *</label><select id="mNShift"><option>Morning</option><option>Evening</option><option>Night</option></select></div>
+    </div>
+    <div class="form-group"><label>Custom Password (leave blank to auto-generate)</label><input type="text" id="mNPass" placeholder="Leave blank to auto-generate"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveNewNurse()">Add Nurse</button>`);
+}
+
+async function saveNewNurse(){
+  const name=document.getElementById('mNName').value.trim();
+  const mobile=document.getElementById('mNMobile').value.trim();
+  const email=document.getElementById('mNEmail').value.trim();
+  const ward=document.getElementById('mNWard').value;
+  const shift=document.getElementById('mNShift').value;
+  let pass=document.getElementById('mNPass').value.trim();
+  if(!name||!email||!ward){toast('Please fill required fields','');return;}
+  const nurses=DB.get('nurses')||[];
+  if(nurses.find(n=>n.email===email)){toast('Email already exists!','');return;}
+  if(!pass) pass=`Nurse@${name.split(' ').pop()}${Math.floor(1000+Math.random()*9000)}`;
+
+  // Try API first
+  const r=await API.post('nurses',{name,email,password:pass,ward,shift,mobile,status:'active',joined_date:today()});
+  if(r&&r.success){
+    await DB.fetchAndCache('nurses');
+    closeModal();
+    toast(`Nurse added! Email: ${email} | Password: ${pass}`,'success');
+    renderAdminNurses();
+    return;
+  }
+  // Fallback: localStorage
+  nurses.push({id:nextId(nurses),name,email,password:pass,ward,shift,mobile,status:'active',joined:today()});
+  DB.set('nurses',nurses);
+  closeModal();
+  toast(`Nurse added (offline)! Email: ${email} | Password: ${pass}`,'success');
+  renderAdminNurses();
+}
+
+function editNurseModal(id){
+  const nurses=DB.get('nurses')||[];
+  const n=nurses.find(x=>x.id===id);
+  if(!n)return;
+  openModal('Edit Nurse — '+n.name,`
+    <div class="cred-box">
+      <h4>Current Login Credentials</h4>
+      <div class="cred-item"><span>Email</span><code>${n.email}</code></div>
+      <div class="cred-item"><span>Password</span><code>${n.password}</code></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name</label><input type="text" id="eNName" value="${n.name}"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="eNMobile" value="${n.mobile}"></div>
+    </div>
+    <div class="form-group"><label>Email (Login)</label><input type="email" id="eNEmail" value="${n.email}"></div>
+    <div class="form-group"><label>Password (Login)</label><input type="text" id="eNPass" value="${n.password}"><small style="font-size:11px;color:var(--text3)">Change to update nurse's login password</small></div>
+    <div class="form-row">
+      <div class="form-group"><label>Ward</label><select id="eNWard"><option ${n.ward==='General Ward'?'selected':''}>General Ward</option><option ${n.ward==='ICU'?'selected':''}>ICU</option><option ${n.ward==='Private'?'selected':''}>Private</option><option ${n.ward==='Pediatric Ward'?'selected':''}>Pediatric Ward</option><option ${n.ward==='Emergency'?'selected':''}>Emergency</option></select></div>
+      <div class="form-group"><label>Shift</label><select id="eNShift"><option ${n.shift==='Morning'?'selected':''}>Morning</option><option ${n.shift==='Evening'?'selected':''}>Evening</option><option ${n.shift==='Night'?'selected':''}>Night</option></select></div>
+    </div>
+    <div class="form-group"><label>Status</label><select id="eNStatus"><option value="active" ${n.status==='active'?'selected':''}>Active</option><option value="inactive" ${n.status==='inactive'?'selected':''}>Inactive</option></select></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveEditNurse(${id})">Save Changes</button>`);
+}
+
+async function saveEditNurse(id){
+  const body={name:document.getElementById('eNName').value.trim(),mobile:document.getElementById('eNMobile').value.trim(),ward:document.getElementById('eNWard').value,shift:document.getElementById('eNShift').value,status:document.getElementById('eNStatus').value};
+  const r=await API.put('nurses/'+id,body);
+  if(r&&r.success){
+    await DB.fetchAndCache('nurses');
+    closeModal();toast('Nurse updated successfully!','success');renderAdminNurses();
+    return;
+  }
+  // Fallback: localStorage
+  const nurses=DB.get('nurses')||[];
+  const idx=nurses.findIndex(x=>x.id===id);
+  if(idx===-1)return;
+  nurses[idx]={...nurses[idx],...body,email:document.getElementById('eNEmail').value.trim(),password:document.getElementById('eNPass').value.trim()};
+  DB.set('nurses',nurses);
+  closeModal();toast('Nurse updated (offline)!','success');renderAdminNurses();
+}
+function toggleNurseStatus(id){
+  const nurses=DB.get('nurses')||[];const n=nurses.find(x=>x.id===id);if(!n)return;
+  n.status=n.status==='active'?'inactive':'active';DB.set('nurses',nurses);toast(`Nurse ${n.status==='active'?'enabled':'disabled'}`,'');renderAdminNurses();
+}
+
+function renderAdminReceptionists(){
+  const recs=DB.get('receptionists')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addReceptModal()">+ Add Receptionist</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>Receptionists (${recs.length})</h2></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Password</th><th>Shift</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>${recs.map((r,i)=>`
+            <tr>
+              <td>${i+1}</td>
+              <td><strong>${r.name}</strong><br><span style="font-size:11px;color:var(--text3)">${r.mobile}</span></td>
+              <td style="font-size:12px">${r.email}</td>
+              <td><code style="background:#eeedfe;border:1px solid rgba(83,74,183,0.2);border-radius:4px;padding:2px 8px;font-size:11px;color:#534ab7">${r.password}</code></td>
+              <td><span class="badge badge-${r.shift.toLowerCase()}">${r.shift}</span></td>
+              <td><span class="badge badge-${r.status}">${r.status}</span></td>
+              <td><button class="btn btn-outline btn-sm" onclick="editReceptModal(${r.id})">✏️ Edit</button></td>
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function addReceptModal(){
+  openModal('Add Receptionist',`
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input type="text" id="mRName" placeholder="Full Name"></div>
+      <div class="form-group"><label>Mobile *</label><input type="tel" id="mRMobile" placeholder="Mobile"></div>
+    </div>
+    <div class="form-group"><label>Email *</label><input type="email" id="mREmail" placeholder="Email"></div>
+    <div class="form-group"><label>Shift</label><select id="mRShift"><option>Morning</option><option>Evening</option><option>Night</option></select></div>
+    <div class="form-group"><label>Password (leave blank to auto-generate)</label><input type="text" id="mRPass" placeholder="Auto-generate"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveReceptionist()">Add</button>`);
+}
+async function saveReceptionist(){
+  const name=document.getElementById('mRName').value.trim();
+  const mobile=document.getElementById('mRMobile').value.trim();
+  const email=document.getElementById('mREmail').value.trim();
+  const shift=document.getElementById('mRShift').value;
+  let pass=document.getElementById('mRPass').value.trim();
+  if(!name||!email){toast('Fill required fields','');return;}
+  const recs=DB.get('receptionists')||[];
+  if(recs.find(r=>r.email===email)){toast('Email exists','');return;}
+  if(!pass)pass=`Recept@${Math.floor(1000+Math.random()*9000)}`;
+
+  // Try API first
+  const r=await API.post('receptionists',{name,email,password:pass,mobile,shift,status:'active',joined_date:today()});
+  if(r&&r.success){
+    await DB.fetchAndCache('receptionists');
+    closeModal();toast(`Added! Password: ${pass}`,'success');renderAdminReceptionists();
+    return;
+  }
+  // Fallback: localStorage
+  recs.push({id:nextId(recs),name,email,password:pass,mobile,shift,status:'active',joined:today()});
+  DB.set('receptionists',recs);closeModal();toast(`Added (offline)! Password: ${pass}`,'success');renderAdminReceptionists();
+}
+function editReceptModal(id){
+  const recs=DB.get('receptionists')||[];const r=recs.find(x=>x.id===id);if(!r)return;
+  openModal('Edit Receptionist',`
+    <div class="cred-box"><h4>Login Credentials</h4>
+      <div class="cred-item"><span>Email</span><code>${r.email}</code></div>
+      <div class="cred-item"><span>Password</span><code>${r.password}</code></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Name</label><input type="text" id="eRName" value="${r.name}"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="eRMobile" value="${r.mobile}"></div>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="eREmail" value="${r.email}"></div>
+    <div class="form-group"><label>Password</label><input type="text" id="eRPass" value="${r.password}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Shift</label><select id="eRShift"><option ${r.shift==='Morning'?'selected':''}>Morning</option><option ${r.shift==='Evening'?'selected':''}>Evening</option></select></div>
+      <div class="form-group"><label>Status</label><select id="eRStatus"><option value="active" ${r.status==='active'?'selected':''}>Active</option><option value="inactive" ${r.status==='inactive'?'selected':''}>Inactive</option></select></div>
+    </div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveEditRecept(${id})">Save</button>`);
+}
+async function saveEditRecept(id){
+  const body={name:document.getElementById('eRName').value.trim(),mobile:document.getElementById('eRMobile').value.trim(),shift:document.getElementById('eRShift').value,status:document.getElementById('eRStatus').value};
+  const r=await API.put('receptionists/'+id,body);
+  if(r&&r.success){
+    await DB.fetchAndCache('receptionists');
+    closeModal();toast('Updated!','success');renderAdminReceptionists();
+    return;
+  }
+  // Fallback: localStorage
+  const recs=DB.get('receptionists')||[];const idx=recs.findIndex(x=>x.id===id);if(idx===-1)return;
+  recs[idx]={...recs[idx],...body,email:document.getElementById('eREmail').value.trim(),password:document.getElementById('eRPass').value.trim()};
+  DB.set('receptionists',recs);closeModal();toast('Updated (offline)!','success');renderAdminReceptionists();
+}
+
+async function renderAdminPatients(){
+  // Always refresh from MySQL before rendering
+  await DB.fetchAndCache('patients').catch(()=>{});
+  const patients=DB.get('patients')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>All Patients (${patients.length})</h2></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Age</th><th>Mobile</th><th>Email</th><th>Blood</th><th>Joined</th></tr></thead>
+          <tbody>${patients.map((p,i)=>`
+            <tr><td>${i+1}</td><td><strong>${p.name}</strong></td><td>${p.age}</td><td>${p.mobile}</td><td style="font-size:12px">${p.email}</td><td>${p.blood_group||p.blood||'—'}</td><td>${formatDate(p.joined_date||p.joined)}</td></tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminAppointments(){
+  const appts=DB.get('appointments')||[];
+  const patients=DB.get('patients')||[];
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>All Appointments (${appts.length})</h2></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Token</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th></tr></thead>
+          <tbody>${appts.map(a=>{
+            const pt=patients.find(p=>p.id===a.patientId);
+            const doc=doctors.find(d=>d.id===a.doctorId);
+            return `<tr><td><span style="background:var(--red);color:#fff;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700">#${a.token}</span></td><td>${pt?.name||'—'}</td><td>${doc?.name||'—'}<br><span style="font-size:11px;color:var(--text3)">${doc?.specialization||''}</span></td><td>${formatDate(a.date)}</td><td>${formatTime(a.time)}</td><td style="font-size:12px">${a.reason||'—'}</td><td><span class="badge badge-${a.status}">${a.status}</span></td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminDepartments(){
+  const depts=DB.get('departments')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addDeptModal()">+ Add Department</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>Departments (${depts.length})</h2></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Description</th><th>Floor</th><th>Total Beds</th><th>Available</th><th>Actions</th></tr></thead>
+          <tbody>${depts.map((d,i)=>`
+            <tr><td>${i+1}</td><td><strong>${d.name}</strong></td><td style="font-size:12px">${d.desc}</td><td>${d.floor}</td><td>${d.total}</td>
+            <td><span style="color:${d.available>5?'var(--success)':'var(--red)'};font-weight:600">${d.available}</span></td>
+            <td><button class="btn btn-outline btn-sm" onclick="editDeptModal(${d.id})">✏️ Edit</button></td></tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function addDeptModal(){
+  openModal('Add Department',`
+    <div class="form-group"><label>Name *</label><input type="text" id="mDepN" placeholder="Department name"></div>
+    <div class="form-group"><label>Description</label><input type="text" id="mDepD" placeholder="Brief description"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Floor</label><input type="number" id="mDepF" value="1" min="0"></div>
+      <div class="form-group"><label>Total Beds</label><input type="number" id="mDepT" value="10" min="0"></div>
+    </div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveDept()">Add</button>`);
+}
+async function saveDept(){
+  const n=document.getElementById('mDepN').value.trim();if(!n){toast('Name required','');return;}
+  const total=parseInt(document.getElementById('mDepT').value)||0;
+  const body={name:n,description:document.getElementById('mDepD').value.trim(),floor:parseInt(document.getElementById('mDepF').value)||0,total_beds:total,available_beds:total};
+  // Departments POST not in API — use PUT workaround via localStorage + show note
+  const depts=DB.get('departments')||[];
+  depts.push({id:nextId(depts),name:n,desc:body.description,floor:body.floor,total,available:total});
+  DB.set('departments',depts);closeModal();toast('Department added (local). Restart server to sync.','success');renderAdminDepartments();
+}
+function editDeptModal(id){
+  const depts=DB.get('departments')||[];const d=depts.find(x=>x.id===id);if(!d)return;
+  openModal('Edit Department',`
+    <div class="form-group"><label>Name</label><input type="text" id="eDN" value="${d.name}"></div>
+    <div class="form-group"><label>Description</label><input type="text" id="eDD" value="${d.desc}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Floor</label><input type="number" id="eDF" value="${d.floor}"></div>
+      <div class="form-group"><label>Total Beds</label><input type="number" id="eDT" value="${d.total}"></div>
+    </div>
+    <div class="form-group"><label>Available Beds</label><input type="number" id="eDA" value="${d.available}"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveEditDept(${id})">Save</button>`);
+}
+async function saveEditDept(id){
+  const total=parseInt(document.getElementById('eDT').value)||0;
+  const avail=parseInt(document.getElementById('eDA').value)||0;
+  const r=await API.put('departments/'+id,{available_beds:avail,total_beds:total});
+  if(r&&r.success){
+    await DB.fetchAndCache('departments');
+    closeModal();toast('Saved!','success');renderAdminDepartments();
+    return;
+  }
+  // Fallback: localStorage
+  const depts=DB.get('departments')||[];const idx=depts.findIndex(x=>x.id===id);if(idx===-1)return;
+  depts[idx]={...depts[idx],name:document.getElementById('eDN').value.trim(),desc:document.getElementById('eDD').value.trim(),floor:parseInt(document.getElementById('eDF').value)||0,total,available:avail};
+  DB.set('departments',depts);closeModal();toast('Saved (offline)!','success');renderAdminDepartments();
+}
+
+function renderAdminBeds(){
+  const beds=DB.get('beds')||[];
+  const patients=DB.get('patients')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addBedModal()">+ Add Bed</button>`;
+  const avail=beds.filter(b=>b.status==='available').length;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="stats-grid" style="margin-bottom:20px">
+      <div class="stat-card green"><div class="stat-label">Available</div><div class="stat-value">${avail}</div></div>
+      <div class="stat-card red"><div class="stat-label">Occupied</div><div class="stat-value">${beds.filter(b=>b.status==='occupied').length}</div></div>
+      <div class="stat-card"><div class="stat-label">Total Beds</div><div class="stat-value">${beds.length}</div></div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Bed</th><th>Ward</th><th>Type</th><th>Status</th><th>Patient</th><th>Actions</th></tr></thead>
+          <tbody>${beds.map(b=>{
+            const pt=patients.find(p=>p.id===b.patientId);
+            return `<tr><td><strong>${b.num}</strong></td><td>${b.ward}</td><td>${b.type}</td><td><span class="badge badge-${b.status==='available'?'active':'inactive'}">${b.status}</span></td><td>${pt?.name||'—'}</td>
+            <td><button class="btn btn-outline btn-sm" onclick="toggleBed(${b.id})">${b.status==='available'?'Mark Occupied':'Mark Available'}</button></td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function addBedModal(){
+  openModal('Add Bed',`
+    <div class="form-row">
+      <div class="form-group"><label>Bed Number *</label><input type="text" id="mBNum" placeholder="e.g. D-401"></div>
+      <div class="form-group"><label>Ward *</label><select id="mBWard"><option>General Ward</option><option>ICU</option><option>Private</option><option>Pediatric Ward</option><option>Emergency</option></select></div>
+    </div>
+    <div class="form-group"><label>Type</label><select id="mBType"><option>General</option><option>ICU</option><option>Private</option><option>Semi-Private</option></select></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveBed()">Add Bed</button>`);
+}
+async function saveBed(){
+  const num=document.getElementById('mBNum').value.trim();if(!num){toast('Bed number required','');return;}
+  const beds=DB.get('beds')||[];
+  if(beds.find(b=>b.num===num)){toast('Bed number exists','');return;}
+  const ward=document.getElementById('mBWard').value;
+  const type=document.getElementById('mBType').value;
+  const r=await API.post('beds',{bed_number:num,ward,type,status:'available'});
+  if(r&&r.success){
+    await DB.fetchAndCache('beds');
+    closeModal();toast('Bed added','success');renderAdminBeds();
+    return;
+  }
+  // Fallback: localStorage
+  beds.push({id:nextId(beds),num,ward,type,status:'available',patientId:null});
+  DB.set('beds',beds);closeModal();toast('Bed added (offline)','success');renderAdminBeds();
+}
+async function toggleBed(id){
+  const beds=DB.get('beds')||[];const b=beds.find(x=>x.id===id);if(!b)return;
+  const newStatus=b.status==='available'?'occupied':'available';
+  const r=await API.put('beds/'+id,{status:newStatus,patient_id:null});
+  if(r&&r.success){ await DB.fetchAndCache('beds'); renderAdminBeds(); return; }
+  b.status=newStatus;if(b.status==='available')b.patientId=null;
+  DB.set('beds',beds);renderAdminBeds();
+}
+
+function renderAdminPharmacy(){
+  const meds=DB.get('medicines')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addMedModal()">+ Add Medicine</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Generic</th><th>Category</th><th>Unit</th><th>Stock</th><th>Price</th><th>Expiry</th><th>Actions</th></tr></thead>
+          <tbody>${meds.map((m,i)=>`
+            <tr>
+              <td>${i+1}</td><td><strong>${m.name}</strong></td><td style="font-size:12px">${m.generic}</td><td>${m.cat}</td><td>${m.unit}</td>
+              <td><span style="color:${m.stock<=m.reorder?'var(--red)':'var(--success)'};font-weight:600">${m.stock} ${m.stock<=m.reorder?'⚠️':''}</span></td>
+              <td>₹${m.price}</td><td style="font-size:12px">${formatDate(m.expiry)}</td>
+              <td><button class="btn btn-outline btn-sm" onclick="editMedModal(${m.id})">✏️</button></td>
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function addMedModal(){
+  openModal('Add Medicine',`
+    <div class="form-row">
+      <div class="form-group"><label>Name *</label><input type="text" id="mMN" placeholder="Medicine name"></div>
+      <div class="form-group"><label>Generic Name</label><input type="text" id="mMG" placeholder="Generic"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Category</label><input type="text" id="mMC" placeholder="Analgesic etc."></div>
+      <div class="form-group"><label>Unit</label><select id="mMU"><option>Tablet</option><option>Capsule</option><option>Syrup</option><option>Injection</option><option>Cream</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Stock Qty</label><input type="number" id="mMQ" value="0" min="0"></div>
+      <div class="form-group"><label>Unit Price (₹)</label><input type="number" id="mMP" value="0" min="0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Reorder Level</label><input type="number" id="mMR" value="20" min="0"></div>
+      <div class="form-group"><label>Expiry Date</label><input type="date" id="mME"></div>
+    </div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveMed()">Add</button>`);
+}
+async function saveMed(){
+  const name=document.getElementById('mMN').value.trim();if(!name){toast('Name required','');return;}
+  const body={name,generic_name:document.getElementById('mMG').value.trim(),category:document.getElementById('mMC').value.trim(),unit:document.getElementById('mMU').value,stock:parseInt(document.getElementById('mMQ').value)||0,unit_price:parseFloat(document.getElementById('mMP').value)||0,reorder_level:parseInt(document.getElementById('mMR').value)||20,expiry_date:document.getElementById('mME').value||null};
+  const r=await API.post('medicines',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('medicines');
+    closeModal();toast('Medicine added','success');renderAdminPharmacy();
+    return;
+  }
+  // Fallback: localStorage
+  const meds=DB.get('medicines')||[];
+  meds.push({id:nextId(meds),name,generic:body.generic_name,cat:body.category,unit:body.unit,stock:body.stock,price:body.unit_price,reorder:body.reorder_level,expiry:body.expiry_date});
+  DB.set('medicines',meds);closeModal();toast('Medicine added (offline)','success');renderAdminPharmacy();
+}
+function editMedModal(id){
+  const meds=DB.get('medicines')||[];const m=meds.find(x=>x.id===id);if(!m)return;
+  openModal('Edit Medicine',`
+    <div class="form-group"><label>Name</label><input type="text" id="eMN" value="${m.name}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Stock</label><input type="number" id="eMQ" value="${m.stock}" min="0"></div>
+      <div class="form-group"><label>Price (₹)</label><input type="number" id="eMP" value="${m.price}" min="0"></div>
+    </div>
+    <div class="form-group"><label>Expiry Date</label><input type="date" id="eME" value="${m.expiry}"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveEditMed(${id})">Save</button>`);
+}
+async function saveEditMed(id){
+  const body={stock:parseInt(document.getElementById('eMQ').value)||0,unit_price:parseFloat(document.getElementById('eMP').value)||0,expiry_date:document.getElementById('eME').value||null,reorder_level:10};
+  const r=await API.put('medicines/'+id,body);
+  if(r&&r.success){
+    await DB.fetchAndCache('medicines');
+    closeModal();toast('Updated!','success');renderAdminPharmacy();
+    return;
+  }
+  // Fallback: localStorage
+  const meds=DB.get('medicines')||[];const idx=meds.findIndex(x=>x.id===id);if(idx===-1)return;
+  meds[idx]={...meds[idx],name:document.getElementById('eMN').value.trim(),stock:body.stock,price:body.unit_price,expiry:body.expiry_date};
+  DB.set('medicines',meds);closeModal();toast('Updated (offline)!','success');renderAdminPharmacy();
+}
+
+function renderAdminLabs(){
+  const labs=DB.get('labReports')||[];
+  const patients=DB.get('patients')||[];
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addLabModal()">+ Add Lab Report</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Patient</th><th>Doctor</th><th>Test</th><th>Date</th><th>Status</th><th>Result</th></tr></thead>
+          <tbody>${labs.map((l,i)=>{
+            const pt=patients.find(p=>p.id===l.patientId);
+            const doc=doctors.find(d=>d.id===l.doctorId);
+            return `<tr><td>${i+1}</td><td>${pt?.name||'—'}</td><td>${doc?.name||'—'}</td><td>${l.test}</td><td>${formatDate(l.date)}</td><td><span class="badge badge-${l.status}">${l.status}</span></td><td style="font-size:12px;max-width:200px">${l.result||'Pending'}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function addLabModal(){
+  const patients=DB.get('patients')||[];
+  const doctors=DB.get('doctors')||[];
+  openModal('Add Lab Report',`
+    <div class="form-row">
+      <div class="form-group"><label>Patient *</label><select id="mLPt"><option value="">Select</option>${patients.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Doctor</label><select id="mLDoc"><option value="">Select</option>${doctors.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Test Name *</label><input type="text" id="mLTest" placeholder="e.g. CBC, Blood Sugar"></div>
+      <div class="form-group"><label>Test Date</label><input type="date" id="mLDate" value="${today()}"></div>
+    </div>
+    <div class="form-group"><label>Result</label><textarea id="mLResult" placeholder="Test result details..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Normal Range</label><input type="text" id="mLRange" placeholder="e.g. 70-100 mg/dL"></div>
+      <div class="form-group"><label>Status</label><select id="mLStatus"><option>pending</option><option>completed</option></select></div>
+    </div>
+    <div class="form-group"><label>Remarks</label><input type="text" id="mLRem" placeholder="Any remarks"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveLabReport()">Add Report</button>`);
+}
+async function saveLabReport(){
+  const patId=parseInt(document.getElementById('mLPt').value);
+  const test=document.getElementById('mLTest').value.trim();
+  if(!patId||!test){toast('Fill required fields','');return;}
+  const body={patient_id:patId,doctor_id:parseInt(document.getElementById('mLDoc').value)||null,test_name:test,test_date:document.getElementById('mLDate').value,result:document.getElementById('mLResult').value,normal_range:document.getElementById('mLRange').value,status:document.getElementById('mLStatus').value,remarks:document.getElementById('mLRem').value};
+  const r=await API.post('lab_reports',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('lab_reports');
+    closeModal();toast('Report added','success');renderAdminLabs();
+    return;
+  }
+  // Fallback: localStorage
+  const labs=DB.get('labReports')||[];
+  labs.push({id:nextId(labs),patientId:patId,doctorId:body.doctor_id,test,date:body.test_date,result:body.result,range:body.normal_range,status:body.status,remarks:body.remarks});
+  DB.set('labReports',labs);closeModal();toast('Report added (offline)','success');renderAdminLabs();
+}
+
+function renderAdminBilling(){
+  const bills=DB.get('bills')||[];
+  const patients=DB.get('patients')||[];
+  const total=bills.reduce((s,b)=>s+b.total,0);
+  const paid=bills.reduce((s,b)=>s+b.paid,0);
+  document.getElementById('contentArea').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card green"><div class="stat-label">Total Collected</div><div class="stat-value">₹${paid.toLocaleString()}</div></div>
+      <div class="stat-card amber"><div class="stat-label">Outstanding</div><div class="stat-value">₹${(total-paid).toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">Total Bills</div><div class="stat-value">${bills.length}</div></div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Invoice</th><th>Patient</th><th>Total</th><th>Paid</th><th>Status</th><th>Method</th><th>Date</th></tr></thead>
+          <tbody>${bills.map(b=>{
+            const pt=patients.find(p=>p.id===b.patientId);
+            return `<tr><td style="font-family:monospace;font-size:12px">${b.invoice}</td><td>${pt?.name||'—'}</td><td>₹${b.total.toLocaleString()}</td><td>₹${b.paid.toLocaleString()}</td><td><span class="badge badge-${b.status}">${b.status}</span></td><td>${b.method||'—'}</td><td>${formatDate(b.date)}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// =================== PATIENT PANEL ===================
+// ============================================================
+function renderPatient(key){
+  if(key==='dashboard') renderPatientDashboard();
+  else if(key==='bookAppointment') renderBookAppointment();
+  else if(key==='myAppointments') renderMyAppointments();
+  else if(key==='prescriptions') renderPatientPrescriptions();
+  else if(key==='labReports') renderPatientLabs();
+  else if(key==='bills') renderPatientBills();
+  else if(key==='chat') renderPatientChat();
+  else if(key==='healthTracking') renderHealthTracking();
+  else if(key==='vitals') renderPatientVitals();
+}
+function renderPatientDashboard(){
+  const appts=DB.get('appointments')||[];
+  const myAppts=appts.filter(a=>a.patientId===currentUser.id);
+  const upcoming=myAppts.filter(a=>a.date>=today()&&a.status==='scheduled');
+  const pres=(DB.get('prescriptions')||[]).filter(p=>p.patientId===currentUser.id);
+  const labs=(DB.get('labReports')||[]).filter(l=>l.patientId===currentUser.id);
+  document.getElementById('contentArea').innerHTML=`
+    <div class="alert alert-info" style="margin-bottom:20px">👋 Welcome, <strong>${currentUser.name}</strong>! Your health portal is ready.</div>
+    <div class="stats-grid">
+      <div class="stat-card red"><div class="stat-icon">📅</div><div class="stat-label">Upcoming Appointments</div><div class="stat-value">${upcoming.length}</div></div>
+      <div class="stat-card green"><div class="stat-icon">💊</div><div class="stat-label">Prescriptions</div><div class="stat-value">${pres.length}</div></div>
+      <div class="stat-card blue"><div class="stat-icon">🔬</div><div class="stat-label">Lab Reports</div><div class="stat-value">${labs.length}</div></div>
+      <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-label">Total Visits</div><div class="stat-value">${myAppts.length}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div><h2>Upcoming Appointments</h2></div><button class="btn btn-primary btn-sm" onclick="navTo('bookAppointment')">+ Book New</button></div>
+      ${upcoming.length===0?`<div class="empty-state"><div class="es-icon">📅</div><p>No upcoming appointments.<br><a href="#" style="color:var(--red)" onclick="navTo('bookAppointment')">Book one now</a></p></div>`
+      :upcoming.map(a=>{
+        const doc=(DB.get('doctors')||[]).find(d=>d.id===a.doctorId);
+        return `<div class="token-card">
+          <div class="token-num">#${a.token}</div>
+          <div class="token-info"><h4>${doc?.name||'Doctor'}</h4><p>${doc?.specialization||''} • ${formatDate(a.date)} at ${formatTime(a.time)}</p><p style="margin-top:4px;font-size:12px;color:var(--text3)">${a.reason||'General Consultation'}</p></div>
+          <span class="badge badge-scheduled" style="margin-left:auto;align-self:flex-start">${a.status}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderBookAppointment(){
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>Book an Appointment</h2><p>Select a doctor and schedule</p></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div class="form-group"><label>Select Doctor *</label>
+            <select id="bADoc" onchange="updateDoctorInfo()">
+              <option value="">Choose a doctor</option>
+              ${doctors.filter(d=>d.status==='active').map(d=>`<option value="${d.id}">${d.name} — ${d.specialization}</option>`).join('')}
+            </select>
+          </div>
+          <div id="docInfo" style="margin-bottom:16px"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Date *</label><input type="date" id="bADate" min="${today()}"></div>
+            <div class="form-group"><label>Preferred Time *</label><select id="bATime">
+              ${['09:00','09:30','10:00','10:30','11:00','11:30','12:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00'].map(t=>`<option value="${t}">${formatTime(t)}</option>`).join('')}
+            </select></div>
+          </div>
+          <div class="form-group"><label>Reason for Visit</label><textarea id="bAReason" placeholder="Describe your symptoms or reason..."></textarea></div>
+          <div class="form-group"><label>Appointment Type</label>
+            <select id="bAType"><option value="in-person">In-Person</option><option value="video">Video Consultation</option></select>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="bookAppointment()">Confirm Appointment</button>
+        </div>
+        <div>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:16px">Available Doctors</h3>
+          ${doctors.filter(d=>d.status==='active').map(d=>`
+            <div class="card" style="padding:16px;margin-bottom:12px;cursor:pointer" onclick="document.getElementById('bADoc').value=${d.id};updateDoctorInfo()">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:44px;height:44px;background:var(--red-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px">👨‍⚕️</div>
+                <div>
+                  <div style="font-weight:600;font-size:14px">${d.name}</div>
+                  <div style="font-size:12px;color:var(--text3)">${d.specialization} • ${d.department}</div>
+                  <div style="font-size:12px;color:var(--text3)">${d.experience} yrs exp • ₹${d.fee} consultation</div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:2px">Available: ${d.days}</div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+function updateDoctorInfo(){
+  const id=parseInt(document.getElementById('bADoc').value);
+  const doc=(DB.get('doctors')||[]).find(d=>d.id===id);
+  if(!doc){document.getElementById('docInfo').innerHTML='';return;}
+  document.getElementById('docInfo').innerHTML=`
+    <div class="alert alert-success">Selected: <strong>${doc.name}</strong> — ${doc.specialization} | Fee: ₹${doc.fee} | Days: ${doc.days}</div>
+  `;
+}
+async function bookAppointment(){
+  const docId=parseInt(document.getElementById('bADoc').value);
+  const date=document.getElementById('bADate').value;
+  const time=document.getElementById('bATime').value;
+  const reason=document.getElementById('bAReason').value;
+  const type=document.getElementById('bAType').value;
+  if(!docId||!date){toast('Please select doctor and date','');return;}
+  const r=await API.post('appointments',{patient_id:currentUser.id,doctor_id:docId,appointment_date:date,appointment_time:time||'09:00',reason,type,status:'scheduled',created_by:'patient'});
+  if(r&&r.success){
+    await DB.fetchAndCache('appointments');
+    toast(`Appointment booked! Token #${r.token}`,'success');
+    navTo('myAppointments');
+    return;
+  }
+  // Fallback: localStorage
+  const appts=DB.get('appointments')||[];
+  const dayAppts=appts.filter(a=>a.doctorId===docId&&a.date===date);
+  const token=dayAppts.length+1;
+  appts.push({id:nextId(appts),patientId:currentUser.id,doctorId:docId,date,time,token,status:'scheduled',reason,type,createdBy:'patient'});
+  DB.set('appointments',appts);
+  toast(`Appointment booked (offline)! Token #${token}`,'success');
+  navTo('myAppointments');
+}
+function renderMyAppointments(){
+  const appts=(DB.get('appointments')||[]).filter(a=>a.patientId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>My Appointments</h2></div><button class="btn btn-primary btn-sm" onclick="navTo('bookAppointment')">+ Book New</button></div>
+      ${appts.length===0?`<div class="empty-state"><div class="es-icon">📅</div><p>No appointments yet</p></div>`
+      :appts.map(a=>{
+        const doc=doctors.find(d=>d.id===a.doctorId);
+        return `<div class="token-card" style="background:${a.status==='completed'?'var(--success-bg)':a.status==='cancelled'?'var(--red-light)':'var(--red-light)'}">
+          <div class="token-num" style="background:${a.status==='completed'?'var(--success)':a.status==='cancelled'?'#999':'var(--red)'}">#${a.token}</div>
+          <div class="token-info">
+            <h4>${doc?.name||'Doctor'}</h4>
+            <p>${doc?.specialization||''} • ${formatDate(a.date)} at ${formatTime(a.time)}</p>
+            <p style="font-size:12px;color:var(--text2)">${a.reason||'General visit'} • ${a.type}</p>
+          </div>
+          <span class="badge badge-${a.status}" style="margin-left:auto;align-self:flex-start">${a.status}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderPatientPrescriptions(){
+  const pres=(DB.get('prescriptions')||[]).filter(p=>p.patientId===currentUser.id);
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>My Prescriptions</h2><p>${pres.length} total</p></div></div>
+      ${pres.length===0?`<div class="empty-state"><div class="es-icon">💊</div><p>No prescriptions yet</p></div>`
+      :pres.map(p=>{
+        const doc=doctors.find(d=>d.id===p.doctorId);
+        return `<div class="presc-card">
+          <h4>Diagnosis: ${p.diagnosis||'General'}</h4>
+          <div class="meta">Dr. ${doc?.name||'—'} • ${formatDate(p.date)} ${p.followUp?`• Follow-up: ${formatDate(p.followUp)}`:''}
+          </div>
+          ${p.notes?`<p style="font-size:12px;color:var(--text2);margin-bottom:12px;background:var(--bg);padding:8px;border-radius:6px">${p.notes}</p>`:''}
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">MEDICINES</div>
+          ${(p.medicines||[]).map(m=>`
+            <div class="medicine-row">
+              <div><div class="med-name">💊 ${m.name}</div><div class="med-detail">${m.dosage} • ${m.frequency} • ${m.duration}</div>${m.instructions?`<div class="med-detail" style="font-style:italic">${m.instructions}</div>`:''}</div>
+            </div>
+          `).join('')}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderPatientLabs(){
+  const labs=(DB.get('labReports')||[]).filter(l=>l.patientId===currentUser.id);
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>Lab Reports</h2></div></div>
+      ${labs.length===0?`<div class="empty-state"><div class="es-icon">🔬</div><p>No lab reports</p></div>`
+      :labs.map(l=>`
+        <div style="border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <h4 style="font-size:14px;font-weight:600">🔬 ${l.test}</h4>
+            <span class="badge badge-${l.status}">${l.status}</span>
+          </div>
+          <p style="font-size:12px;color:var(--text3);margin-bottom:8px">${formatDate(l.date)}</p>
+          ${l.result?`<div style="background:var(--bg);border-radius:6px;padding:10px;font-size:13px;margin-bottom:6px">${l.result}</div>`:''}
+          ${l.range?`<p style="font-size:11px;color:var(--text3)">Normal range: ${l.range}</p>`:''}
+          ${l.remarks?`<p style="font-size:12px;color:var(--text2);margin-top:6px">${l.remarks}</p>`:''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function renderPatientBills(){
+  const bills=(DB.get('bills')||[]).filter(b=>b.patientId===currentUser.id);
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div><h2>Bills & Payments</h2></div></div>
+      ${bills.length===0?`<div class="empty-state"><div class="es-icon">💳</div><p>No bills found</p></div>`
+      :bills.map(b=>`
+        <div style="border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div><h4 style="font-size:14px;font-weight:600">${b.invoice}</h4><p style="font-size:12px;color:var(--text3)">${formatDate(b.date)}</p></div>
+            <span class="badge badge-${b.status}">${b.status}</span>
+          </div>
+          ${(b.items||[]).map(i=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border)"><span>${i.desc}</span><span>₹${i.total.toLocaleString()}</span></div>`).join('')}
+          <div style="display:flex;justify-content:space-between;font-weight:600;margin-top:10px;font-size:14px"><span>Total</span><span>₹${b.total.toLocaleString()}</span></div>
+          <div style="display:flex;justify-content:space-between;color:var(--success);margin-top:4px;font-size:13px"><span>Paid</span><span>₹${b.paid.toLocaleString()}</span></div>
+          ${b.paid<b.total?`<div style="display:flex;justify-content:space-between;color:var(--red);font-size:13px"><span>Balance</span><span>₹${(b.total-b.paid).toLocaleString()}</span></div>`:''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function renderPatientChat(){
+  const doctors=DB.get('doctors')||[];
+  let selDoc=doctors[0]?.id;
+  const renderMsgs=()=>{
+    const msgs=(DB.get('messages')||[]).filter(m=>(m.fromType==='patient'&&m.fromId===currentUser.id&&m.toType==='doctor'&&m.toId===selDoc)||(m.fromType==='doctor'&&m.fromId===selDoc&&m.toType==='patient'&&m.toId===currentUser.id));
+    document.getElementById('chatMsgs').innerHTML=msgs.length===0?'<div style="text-align:center;color:var(--text3);padding:40px">No messages yet. Start a conversation!</div>'
+    :msgs.map(m=>`<div class="chat-msg ${m.fromType==='patient'?'mine':'theirs'}"><div>${m.msg}</div><div class="msg-time">${m.time}</div></div>`).join('');
+    const cb=document.getElementById('chatMsgs');cb.scrollTop=cb.scrollHeight;
+  };
+  document.getElementById('contentArea').innerHTML=`
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:20px">
+      <div class="card" style="padding:16px">
+        <h3 style="font-size:13px;font-weight:600;margin-bottom:12px">Doctors</h3>
+        ${doctors.map(d=>`<div onclick="selDoc=${d.id};document.querySelectorAll('.doc-item').forEach(x=>x.classList.remove('active'));this.classList.add('active');renderMsgs_${currentUser.id}()" class="doc-item nav-item" style="border-radius:8px;padding:10px;margin-bottom:4px;background:var(--sidebar-hover)">
+          <span style="font-size:20px">👨‍⚕️</span><div><div style="font-size:12px;font-weight:500;color:#fff">${d.name}</div><div style="font-size:10px;color:rgba(255,255,255,0.4)">${d.specialization}</div></div>
+        </div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>Chat with Doctor</h2></div>
+        <div class="chat-box" id="chatMsgs"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="Type your message..." onkeydown="if(event.key==='Enter')sendPatientMsg()">
+          <button class="btn btn-primary" onclick="sendPatientMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+  `;
+  renderMsgs();
+  window[`renderMsgs_${currentUser.id}`]=renderMsgs;
+}
+async function sendPatientMsg(){
+  const inp=document.getElementById('chatInput');
+  const msg=inp.value.trim();if(!msg)return;
+  const docs=DB.get('doctors')||[];
+  const docId=docs[0]?.id;
+  // Try API first — saves to MySQL
+  const r=await API.post('messages',{to_type:'doctor',to_id:docId,message:msg});
+  if(r&&r.success){await DB.fetchAndCache('messages');}
+  else{
+    const msgs=DB.get('messages')||[];
+    const now=new Date();
+    msgs.push({id:nextId(msgs),fromType:'patient',fromId:currentUser.id,toType:'doctor',toId:docId,msg,time:now.toISOString().slice(0,16).replace('T',' ')});
+    DB.set('messages',msgs);
+  }
+  inp.value='';
+  renderPatientChat();
+}
+function renderHealthTracking(){
+  const health=(DB.get('health')||[]).filter(h=>h.patientId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const latest=health[0]||{};
+  document.getElementById('contentArea').innerHTML=`
+    <div class="track-grid">
+      <div class="track-card"><div class="tc-icon">👟</div><div class="tc-val">${latest.steps?.toLocaleString()||'—'}</div><div class="tc-label">Steps</div></div>
+      <div class="track-card"><div class="tc-icon">💧</div><div class="tc-val">${latest.water||'—'}L</div><div class="tc-label">Water</div></div>
+      <div class="track-card"><div class="tc-icon">😴</div><div class="tc-val">${latest.sleep||'—'}h</div><div class="tc-label">Sleep</div></div>
+      <div class="track-card"><div class="tc-icon">🏋️</div><div class="tc-val">${latest.exercise||'—'}m</div><div class="tc-label">Exercise</div></div>
+      <div class="track-card"><div class="tc-icon">🍽️</div><div class="tc-val">${latest.calories||'—'}</div><div class="tc-label">Calories</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div><h2>Log Today's Health</h2></div><button class="btn btn-primary btn-sm" onclick="saveHealthLog()">Save</button></div>
+      <div class="form-row">
+        <div class="form-group"><label>Steps Walked</label><input type="number" id="hSteps" value="${latest.steps||''}" placeholder="e.g. 8000"></div>
+        <div class="form-group"><label>Water Intake (Litres)</label><input type="number" id="hWater" step="0.1" value="${latest.water||''}" placeholder="e.g. 2.5"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Sleep (Hours)</label><input type="number" id="hSleep" step="0.5" value="${latest.sleep||''}" placeholder="e.g. 7.5"></div>
+        <div class="form-group"><label>Exercise (Minutes)</label><input type="number" id="hExercise" value="${latest.exercise||''}" placeholder="e.g. 30"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Calories Consumed</label><input type="number" id="hCalories" value="${latest.calories||''}" placeholder="e.g. 1800"></div>
+        <div class="form-group"><label>Mood</label><select id="hMood"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option></select></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Recent History</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Steps</th><th>Water</th><th>Sleep</th><th>Exercise</th><th>Mood</th></tr></thead>
+          <tbody>${health.slice(0,10).map(h=>`<tr><td>${formatDate(h.date)}</td><td>${h.steps?.toLocaleString()||'—'}</td><td>${h.water||'—'}L</td><td>${h.sleep||'—'}h</td><td>${h.exercise||'—'}m</td><td>${h.mood||'—'}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+async function saveHealthLog(){
+  const body={date:today(),steps:parseInt(document.getElementById('hSteps').value)||0,water:parseFloat(document.getElementById('hWater').value)||0,sleep:parseFloat(document.getElementById('hSleep').value)||0,exercise:parseInt(document.getElementById('hExercise').value)||0,calories:parseInt(document.getElementById('hCalories').value)||0,mood:document.getElementById('hMood').value};
+  const r=await API.post('health',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('health');
+    toast('Health log saved!','success');renderHealthTracking();
+    return;
+  }
+  // Fallback: localStorage
+  const health=DB.get('health')||[];
+  const existing=health.findIndex(h=>h.patientId===currentUser.id&&h.date===today());
+  const entry={id:existing>=0?health[existing].id:nextId(health),patientId:currentUser.id,...body};
+  if(existing>=0)health[existing]=entry;else health.push(entry);
+  DB.set('health',health);toast('Health log saved (offline)!','success');renderHealthTracking();
+}
+function renderPatientVitals(){
+  const vitals=(DB.get('vitals')||[]).filter(v=>v.patientId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const latest=vitals[0]||{};
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header"><h2>Latest Vitals</h2><p>${formatDate(latest.date)}</p></div>
+      <div class="vital-grid">
+        <div class="vital-item"><div class="v-label">Blood Pressure</div><div class="v-val">${latest.bp||'—'}</div><div class="v-unit">mmHg</div></div>
+        <div class="vital-item"><div class="v-label">Temperature</div><div class="v-val">${latest.temp||'—'}</div><div class="v-unit">°F</div></div>
+        <div class="vital-item"><div class="v-label">Pulse</div><div class="v-val">${latest.pulse||'—'}</div><div class="v-unit">bpm</div></div>
+        <div class="vital-item"><div class="v-label">SpO₂</div><div class="v-val">${latest.spo2||'—'}</div><div class="v-unit">%</div></div>
+        <div class="vital-item"><div class="v-label">Weight</div><div class="v-val">${latest.weight||'—'}</div><div class="v-unit">kg</div></div>
+        <div class="vital-item"><div class="v-label">Height</div><div class="v-val">${latest.height||'—'}</div><div class="v-unit">cm</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>BP</th><th>Temp</th><th>Pulse</th><th>SpO₂</th><th>Weight</th></tr></thead>
+          <tbody>${vitals.map(v=>`<tr><td>${formatDate(v.date)}</td><td>${v.bp||'—'}</td><td>${v.temp||'—'}°F</td><td>${v.pulse||'—'} bpm</td><td>${v.spo2||'—'}%</td><td>${v.weight||'—'} kg</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// =================== DOCTOR PANEL ===================
+// ============================================================
+function renderDoctor(key){
+  if(key==='dashboard') renderDoctorDashboard();
+  else if(key==='schedule') renderDoctorSchedule();
+  else if(key==='patients') renderDoctorPatients();
+  else if(key==='prescriptions') renderDoctorPrescriptions();
+  else if(key==='labReports') renderDoctorLabs();
+  else if(key==='instructions') renderDoctorInstructions();
+  else if(key==='chat') renderDoctorChat();
+}
+function renderDoctorDashboard(){
+  const appts=DB.get('appointments')||[];
+  const todayA=appts.filter(a=>a.doctorId===currentUser.id&&a.date===today());
+  const patients=new Set(appts.filter(a=>a.doctorId===currentUser.id).map(a=>a.patientId)).size;
+  const pres=(DB.get('prescriptions')||[]).filter(p=>p.doctorId===currentUser.id);
+  document.getElementById('contentArea').innerHTML=`
+    <div class="cred-box" style="margin-bottom:20px">
+      <h4>Your Login Credentials</h4>
+      <div class="cred-item"><span>Email</span><code>${currentUser.email}</code></div>
+      <div class="cred-item"><span>Password</span><code>${currentUser.password}</code></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card red"><div class="stat-icon">📅</div><div class="stat-label">Today's Appointments</div><div class="stat-value">${todayA.length}</div></div>
+      <div class="stat-card green"><div class="stat-icon">👥</div><div class="stat-label">Total Patients</div><div class="stat-value">${patients}</div></div>
+      <div class="stat-card blue"><div class="stat-icon">💊</div><div class="stat-label">Prescriptions Written</div><div class="stat-value">${pres.length}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Today's Schedule</h2><p>${formatDate(today())}</p></div>
+      ${todayA.length===0?`<div class="empty-state"><div class="es-icon">📅</div><p>No appointments today</p></div>`
+      :todayA.map(a=>{
+        const pt=(DB.get('patients')||[]).find(p=>p.id===a.patientId);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div class="token-num" style="width:40px;height:40px;font-size:16px">#${a.token}</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:14px">${pt?.name||'Patient'}</div><div style="font-size:12px;color:var(--text3)">${formatTime(a.time)} • ${a.reason||'General'}</div></div>
+          <button class="btn btn-primary btn-sm" onclick="openPrescribeModal(${a.patientId},${a.id})">+ Prescribe</button>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderDoctorSchedule(){
+  const appts=(DB.get('appointments')||[]).filter(a=>a.doctorId===currentUser.id&&a.date===today());
+  const pts=DB.get('patients')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><h2>Today's Appointments — ${formatDate(today())}</h2><p>${appts.length} patients scheduled</p></div>
+      ${appts.length===0?`<div class="empty-state"><div class="es-icon">✅</div><p>All clear for today!</p></div>`
+      :appts.map(a=>{
+        const pt=pts.find(p=>p.id===a.patientId);
+        return `<div style="display:grid;grid-template-columns:50px 1fr auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)">
+          <div class="token-num">#${a.token}</div>
+          <div>
+            <div style="font-weight:600">${pt?.name||'—'}</div>
+            <div style="font-size:12px;color:var(--text3)">Age: ${pt?.age||'—'} • Blood: ${pt?.blood||'—'} • Mobile: ${pt?.mobile||'—'}</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:3px">Reason: ${a.reason||'General Consultation'}</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary btn-sm" onclick="openPrescribeModal(${a.patientId},${a.id})">Prescribe</button>
+            <button class="btn btn-outline btn-sm" onclick="addLabOrderModal(${a.patientId})">Lab Order</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderDoctorPatients(){
+  const appts=DB.get('appointments')||[];
+  const myPatientIds=[...new Set(appts.filter(a=>a.doctorId===currentUser.id).map(a=>a.patientId))];
+  const patients=DB.get('patients')||[];
+  const myPts=patients.filter(p=>myPatientIds.includes(p.id));
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Age</th><th>Blood</th><th>Mobile</th><th>Actions</th></tr></thead>
+          <tbody>${myPts.map(p=>`
+            <tr><td><strong>${p.name}</strong></td><td>${p.age}</td><td>${p.blood_group||p.blood||'—'}</td><td>${p.mobile}</td>
+            <td style="white-space:nowrap">
+              <button class="btn btn-outline btn-sm" onclick="openPrescribeModal(${p.id},null)">+ Prescribe</button>
+              <button class="btn btn-outline btn-sm" onclick="addLabOrderModal(${p.id})" style="margin-left:4px">Lab Order</button>
+            </td></tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function openPrescribeModal(patientId,apptId){
+  const pt=(DB.get('patients')||[]).find(p=>p.id===patientId);
+  openModal('Write Prescription — '+pt?.name,`
+    <div class="form-group"><label>Diagnosis</label><input type="text" id="pDiag" placeholder="Primary diagnosis"></div>
+    <div class="form-group"><label>Clinical Notes</label><textarea id="pNotes" placeholder="Notes for patient/nurse..."></textarea></div>
+    <div class="form-group"><label>Follow-up Date</label><input type="date" id="pFollowup" min="${today()}"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px"><h4 style="font-size:13px;font-weight:600">Medicines</h4><button class="btn btn-outline btn-sm" onclick="addMedRow()">+ Add</button></div>
+    <div id="medRows">
+      <div class="med-row" style="background:var(--bg);border-radius:8px;padding:12px;margin-bottom:8px">
+        <div class="form-row"><div class="form-group"><label>Medicine Name</label><input type="text" class="mName" placeholder="Paracetamol 500mg"></div><div class="form-group"><label>Dosage</label><input type="text" class="mDose" placeholder="1 tablet"></div></div>
+        <div class="form-row"><div class="form-group"><label>Frequency</label><select class="mFreq"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Four times daily</option><option>As needed</option></select></div><div class="form-group"><label>Duration</label><input type="text" class="mDur" placeholder="5 days"></div></div>
+        <div class="form-group"><label>Instructions</label><input type="text" class="mInst" placeholder="After meals, with water..."></div>
+      </div>
+    </div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="savePrescription(${patientId},${apptId})">Save Prescription</button>`);
+}
+function addMedRow(){
+  const container=document.getElementById('medRows');
+  const div=document.createElement('div');
+  div.className='med-row';
+  div.style.cssText='background:var(--bg);border-radius:8px;padding:12px;margin-bottom:8px';
+  div.innerHTML=`
+    <div class="form-row"><div class="form-group"><label>Medicine</label><input type="text" class="mName" placeholder="Medicine name"></div><div class="form-group"><label>Dosage</label><input type="text" class="mDose" placeholder="1 tablet"></div></div>
+    <div class="form-row"><div class="form-group"><label>Frequency</label><select class="mFreq"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>As needed</option></select></div><div class="form-group"><label>Duration</label><input type="text" class="mDur" placeholder="5 days"></div></div>
+    <div style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>Instructions</label><input type="text" class="mInst" placeholder="After meals..."></div><button class="btn btn-danger btn-sm" onclick="this.closest('.med-row').remove()" style="align-self:flex-end;margin-bottom:18px">✕</button></div>
+  `;
+  container.appendChild(div);
+}
+async function savePrescription(patientId,apptId){
+  const rows=document.querySelectorAll('.med-row');
+  const medicines=[...rows].map(r=>({name:r.querySelector('.mName')?.value.trim(),dosage:r.querySelector('.mDose')?.value.trim(),frequency:r.querySelector('.mFreq')?.value,duration:r.querySelector('.mDur')?.value.trim(),instructions:r.querySelector('.mInst')?.value.trim()})).filter(m=>m.name);
+  if(!document.getElementById('pDiag').value.trim()){toast('Please enter diagnosis','');return;}
+  const body={patient_id:patientId,appointment_id:apptId,diagnosis:document.getElementById('pDiag').value.trim(),notes:document.getElementById('pNotes').value.trim(),follow_up_date:document.getElementById('pFollowup').value||null,prescription_date:today(),medicines};
+  const r=await API.post('prescriptions',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('prescriptions');
+    closeModal();toast('Prescription saved!','success');
+    return;
+  }
+  // Fallback: localStorage
+  const pres=DB.get('prescriptions')||[];
+  pres.push({id:nextId(pres),patientId,doctorId:currentUser.id,appointmentId:apptId,diagnosis:body.diagnosis,notes:body.notes,followUp:body.follow_up_date,date:today(),medicines});
+  DB.set('prescriptions',pres);
+  closeModal();toast('Prescription saved (offline)!','success');
+}
+function renderDoctorPrescriptions(){
+  const pres=(DB.get('prescriptions')||[]).filter(p=>p.doctorId===currentUser.id);
+  const pts=DB.get('patients')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="openPrescribeModal(${pts[0]?.id||1},null)">+ New Prescription</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      ${pres.length===0?`<div class="empty-state"><div class="es-icon">💊</div><p>No prescriptions written yet</p></div>`
+      :pres.map(p=>{
+        const pt=pts.find(x=>x.id===p.patientId);
+        return `<div class="presc-card">
+          <h4>${pt?.name||'Patient'} — ${p.diagnosis}</h4>
+          <div class="meta">${formatDate(p.date)} ${p.followUp?`• Follow-up: ${formatDate(p.followUp)}`:''}
+          </div>
+          ${(p.medicines||[]).map(m=>`<div class="medicine-row"><div><div class="med-name">💊 ${m.name}</div><div class="med-detail">${m.dosage} • ${m.frequency} • ${m.duration}</div></div></div>`).join('')}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderDoctorLabs(){
+  const labs=(DB.get('labReports')||[]).filter(l=>l.doctorId===currentUser.id);
+  const pts=DB.get('patients')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addLabOrderModal(${pts[0]?.id||1})">+ Order Lab Test</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Patient</th><th>Test</th><th>Date</th><th>Status</th><th>Result</th></tr></thead>
+          <tbody>${labs.map(l=>{
+            const pt=pts.find(p=>p.id===l.patientId);
+            return `<tr><td>${pt?.name||'—'}</td><td>${l.test}</td><td>${formatDate(l.date)}</td><td><span class="badge badge-${l.status}">${l.status}</span></td><td style="font-size:12px;max-width:200px">${l.result||'Pending'}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function addLabOrderModal(patientId){
+  openModal('Order Lab Test',`
+    <div class="form-group"><label>Test Name *</label><input type="text" id="labTest" placeholder="e.g. CBC, Blood Sugar, LFT"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Test Date</label><input type="date" id="labDate" value="${today()}"></div>
+      <div class="form-group"><label>Normal Range</label><input type="text" id="labRange" placeholder="e.g. 70-100 mg/dL"></div>
+    </div>
+    <div class="form-group"><label>Result (if available)</label><textarea id="labResult" placeholder="Lab result..."></textarea></div>
+    <div class="form-group"><label>Remarks</label><input type="text" id="labRem" placeholder="Any remarks"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveLabOrder(${patientId})">Save</button>`);
+}
+async function saveLabOrder(patientId){
+  const test=document.getElementById('labTest').value.trim();if(!test){toast('Enter test name','');return;}
+  const result=document.getElementById('labResult').value.trim();
+  const body={patient_id:patientId,test_name:test,test_date:document.getElementById('labDate').value,result,normal_range:document.getElementById('labRange').value,status:result?'completed':'pending',remarks:document.getElementById('labRem').value};
+  const r=await API.post('lab_reports',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('lab_reports');
+    closeModal();toast('Lab order saved!','success');
+    return;
+  }
+  // Fallback: localStorage
+  const labs=DB.get('labReports')||[];
+  labs.push({id:nextId(labs),patientId,doctorId:currentUser.id,test,date:body.test_date,result,range:body.normal_range,status:body.status,remarks:body.remarks});
+  DB.set('labReports',labs);closeModal();toast('Lab order saved (offline)!','success');
+}
+function renderDoctorInstructions(){
+  const insts=(DB.get('instructions')||[]).filter(i=>i.doctorId===currentUser.id);
+  const pts=DB.get('patients')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addInstructionModal()">+ Add Instruction</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      ${insts.length===0?`<div class="empty-state"><div class="es-icon">📋</div><p>No instructions added</p></div>`
+      :insts.map(i=>{
+        const pt=pts.find(p=>p.id===i.patientId);
+        return `<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span class="badge ${i.priority==='high'?'badge-cancelled':'badge-scheduled'}" style="flex-shrink:0">${i.priority}</span>
+          <div style="flex:1"><div style="font-size:13px;margin-bottom:4px"><strong>${pt?.name||'Patient'}</strong> — ${i.instruction}</div><div style="font-size:11px;color:var(--text3)">${formatDate(i.date)}</div></div>
+          <span class="badge badge-${i.status==='pending'?'pending':'completed'}">${i.status}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function addInstructionModal(){
+  const pts=DB.get('patients')||[];
+  openModal('Add Patient Instruction',`
+    <div class="form-group"><label>Patient *</label><select id="instPt"><option value="">Select</option>${pts.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+    <div class="form-group"><label>Instruction *</label><textarea id="instText" placeholder="Instruction for nurse/staff..."></textarea></div>
+    <div class="form-group"><label>Priority</label><select id="instPrio"><option>normal</option><option>high</option><option>urgent</option></select></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveInstruction()">Save</button>`);
+}
+async function saveInstruction(){
+  const ptId=parseInt(document.getElementById('instPt').value);
+  const text=document.getElementById('instText').value.trim();
+  if(!ptId||!text){toast('Fill all fields','');return;}
+  const priority=document.getElementById('instPrio').value;
+  const r=await API.post('instructions',{patient_id:ptId,instruction:text,priority,date:today()});
+  if(r&&r.success){
+    await DB.fetchAndCache('instructions');
+    closeModal();toast('Instruction saved!','success');renderDoctorInstructions();
+    return;
+  }
+  // Fallback: localStorage
+  const insts=DB.get('instructions')||[];
+  insts.push({id:nextId(insts),patientId:ptId,doctorId:currentUser.id,instruction:text,priority,status:'pending',date:today()});
+  DB.set('instructions',insts);closeModal();toast('Instruction saved (offline)!','success');renderDoctorInstructions();
+}
+function renderDoctorChat(){
+  const appts=DB.get('appointments')||[];
+  const myPtIds=[...new Set(appts.filter(a=>a.doctorId===currentUser.id).map(a=>a.patientId))];
+  const patients=(DB.get('patients')||[]).filter(p=>myPtIds.includes(p.id));
+  let selPt=patients[0]?.id;
+  const renderMsgs=()=>{
+    const msgs=(DB.get('messages')||[]).filter(m=>(m.fromType==='doctor'&&m.fromId===currentUser.id&&m.toType==='patient'&&m.toId===selPt)||(m.fromType==='patient'&&m.fromId===selPt&&m.toType==='doctor'&&m.toId===currentUser.id));
+    document.getElementById('dChatMsgs').innerHTML=msgs.length===0?`<div style="text-align:center;color:var(--text3);padding:40px">No messages with this patient</div>`
+    :msgs.map(m=>`<div class="chat-msg ${m.fromType==='doctor'?'mine':'theirs'}"><div>${m.msg}</div><div class="msg-time">${m.time}</div></div>`).join('');
+    const cb=document.getElementById('dChatMsgs');cb.scrollTop=cb.scrollHeight;
+  };
+  document.getElementById('contentArea').innerHTML=`
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:20px">
+      <div class="card" style="padding:16px">
+        <h3 style="font-size:13px;font-weight:600;margin-bottom:12px">My Patients</h3>
+        ${patients.map(p=>`<div onclick="selPt=${p.id};document.querySelectorAll('.pt-item').forEach(x=>x.classList.remove('active'));this.classList.add('active');renderDocMsgs()" class="pt-item nav-item" style="border-radius:8px;padding:10px;margin-bottom:4px;background:var(--sidebar-hover)">
+          <span style="font-size:20px">👤</span><div><div style="font-size:12px;font-weight:500;color:#fff">${p.name}</div><div style="font-size:10px;color:rgba(255,255,255,0.4)">Age ${p.age}</div></div>
+        </div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>Patient Messages</h2></div>
+        <div class="chat-box" id="dChatMsgs"></div>
+        <div class="chat-input-row">
+          <input type="text" id="dChatInput" placeholder="Reply to patient..." onkeydown="if(event.key==='Enter')sendDoctorMsg()">
+          <button class="btn btn-primary" onclick="sendDoctorMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+  `;
+  renderMsgs();
+  window.renderDocMsgs=renderMsgs;
+  window.getChatPtId=()=>selPt;
+}
+async function sendDoctorMsg(){
+  const inp=document.getElementById('dChatInput');
+  const msg=inp.value.trim();if(!msg)return;
+  const ptId=window.getChatPtId?.()|| (DB.get('patients')||[])[0]?.id;
+  // Try API first — saves to MySQL
+  const r=await API.post('messages',{to_type:'patient',to_id:ptId,message:msg});
+  if(r&&r.success){await DB.fetchAndCache('messages');}
+  else{
+    const msgs=DB.get('messages')||[];
+    msgs.push({id:nextId(msgs),fromType:'doctor',fromId:currentUser.id,toType:'patient',toId:ptId,msg,time:new Date().toISOString().slice(0,16).replace('T',' ')});
+    DB.set('messages',msgs);
+  }
+  inp.value='';window.renderDocMsgs?.();
+}
+
+// ============================================================
+// =================== NURSE PANEL ===================
+// ============================================================
+function renderNurse(key){
+  if(key==='dashboard') renderNurseDashboard();
+  else if(key==='patients') renderNursePatients();
+  else if(key==='medications') renderNurseMedications();
+  else if(key==='vitals') renderNurseVitals();
+  else if(key==='beds') renderNurseBeds();
+  else if(key==='instructions') renderNurseInstructions();
+}
+function renderNurseDashboard(){
+  const meds=(DB.get('medications')||[]).filter(m=>m.date===today());
+  const pending=meds.filter(m=>!m.given).length;
+  const insts=(DB.get('instructions')||[]).filter(i=>i.status==='pending');
+  document.getElementById('contentArea').innerHTML=`
+    <div class="cred-box" style="margin-bottom:20px">
+      <h4>Your Login Credentials</h4>
+      <div class="cred-item"><span>Email</span><code>${currentUser.email}</code></div>
+      <div class="cred-item"><span>Password</span><code>${currentUser.password}</code></div>
+      <div class="cred-item"><span>Ward</span><code>${currentUser.ward}</code></div>
+      <div class="cred-item"><span>Shift</span><code>${currentUser.shift}</code></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card red"><div class="stat-icon">💊</div><div class="stat-label">Pending Medications</div><div class="stat-value">${pending}</div></div>
+      <div class="stat-card amber"><div class="stat-icon">📋</div><div class="stat-label">Doctor Instructions</div><div class="stat-value">${insts.length}</div></div>
+      <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-label">Medications Given</div><div class="stat-value">${meds.length-pending}</div></div>
+    </div>
+    ${pending>0?`<div class="alert alert-error">⚠️ ${pending} medication(s) pending for today! <a href="#" style="color:var(--red);font-weight:600" onclick="navTo('medications')">Go to schedule →</a></div>`:''}
+    ${insts.length>0?`<div class="alert alert-info">📋 ${insts.length} pending instruction(s) from doctors. <a href="#" style="color:var(--info);font-weight:600" onclick="navTo('instructions')">View →</a></div>`:''}
+    <div class="card">
+      <div class="card-header"><h2>Today's Medication Schedule</h2></div>
+      ${meds.map(m=>{
+        const pt=(DB.get('patients')||[]).find(p=>p.id===m.patientId);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:20px">${m.given?'✅':'⏰'}</span>
+          <div style="flex:1"><div style="font-weight:600;font-size:14px">${pt?.name||'—'}</div><div style="font-size:12px;color:var(--text3)">${m.medicine} • ${m.dosage} • ${formatTime(m.time)}</div></div>
+          ${!m.given?`<button class="btn btn-success btn-sm" onclick="markGiven(${m.id})">Mark Given</button>`:'<span class="badge badge-active">Done</span>'}
+        </div>`;
+      }).join('')||`<div class="empty-state"><div class="es-icon">✅</div><p>No medications scheduled for today</p></div>`}
+    </div>
+  `;
+}
+function renderNursePatients(){
+  const appts=DB.get('appointments')||[];
+  const recentPtIds=[...new Set(appts.filter(a=>a.date>=nextDate(-7)).map(a=>a.patientId))];
+  const patients=(DB.get('patients')||[]).filter(p=>recentPtIds.includes(p.id));
+  const beds=DB.get('beds')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Patient</th><th>Age</th><th>Blood</th><th>Bed</th><th>Actions</th></tr></thead>
+          <tbody>${patients.map(p=>{
+            const bed=beds.find(b=>b.patientId===p.id);
+            return `<tr><td><strong>${p.name}</strong><br><span style="font-size:11px;color:var(--text3)">${p.mobile}</span></td><td>${p.age}</td><td>${p.blood_group||p.blood||'—'}</td><td>${bed?.bed_number||bed?.num||'OPD'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn btn-outline btn-sm" onclick="recordVitalModal(${p.id})">📊 Vitals</button>
+              <button class="btn btn-outline btn-sm" onclick="addMedScheduleModal(${p.id})" style="margin-left:4px">💊 Schedule</button>
+            </td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function renderNurseMedications(){
+  const meds=(DB.get('medications')||[]).filter(m=>m.date===today());
+  const pts=DB.get('patients')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="addMedScheduleModal(${pts[0]?.id||1})">+ Add Schedule</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      ${meds.length===0?`<div class="empty-state"><div class="es-icon">💊</div><p>No medications scheduled today</p></div>`
+      :meds.map(m=>{
+        const pt=pts.find(p=>p.id===m.patientId);
+        return `<div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)">
+          <div style="width:48px;height:48px;border-radius:10px;background:${m.given?'var(--success-bg)':'var(--warn-bg)'};display:flex;align-items:center;justify-content:center;font-size:22px">${m.given?'✅':'💊'}</div>
+          <div style="flex:1">
+            <div style="font-weight:600">${m.medicine}</div>
+            <div style="font-size:12px;color:var(--text3)">${pt?.name||'—'} • ${m.dosage} • ${formatTime(m.time)}</div>
+            ${m.notes?`<div style="font-size:11px;color:var(--text2)">${m.notes}</div>`:''}
+          </div>
+          ${m.given?`<span class="badge badge-active">✓ Given</span>`:`<button class="btn btn-success btn-sm" onclick="markGiven(${m.id})">Mark Given</button>`}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+async function markGiven(id){
+  const r=await API.put('medications/'+id,{is_given:1,notes:''});
+  if(r&&r.success){await DB.fetchAndCache('medications',{date:today()});toast('Marked as given!','success');renderNurseMedications();return;}
+  // Fallback: localStorage
+  const meds=DB.get('medications')||[];
+  const m=meds.find(x=>x.id===id);if(!m)return;
+  m.given=true;DB.set('medications',meds);toast('Marked as given!','success');renderNurseMedications();
+}
+function addMedScheduleModal(patientId){
+  const pts=DB.get('patients')||[];
+  openModal('Add Medication Schedule',`
+    <div class="form-group"><label>Patient *</label><select id="mSPt">${pts.map(p=>`<option value="${p.id}" ${p.id===patientId?'selected':''}>${p.name}</option>`).join('')}</select></div>
+    <div class="form-row">
+      <div class="form-group"><label>Medicine *</label><input type="text" id="mSMed" placeholder="Medicine name"></div>
+      <div class="form-group"><label>Dosage</label><input type="text" id="mSDose" placeholder="1 tablet"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Time *</label><input type="time" id="mSTime" value="08:00"></div>
+      <div class="form-group"><label>Date</label><input type="date" id="mSDate" value="${today()}"></div>
+    </div>
+    <div class="form-group"><label>Notes</label><input type="text" id="mSNotes" placeholder="Any special instructions"></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveMedSchedule()">Add</button>`);
+}
+async function saveMedSchedule(){
+  const med=document.getElementById('mSMed').value.trim();if(!med){toast('Enter medicine name','');return;}
+  const body={patient_id:parseInt(document.getElementById('mSPt').value),nurse_id:currentUser.id,medicine:med,dosage:document.getElementById('mSDose').value.trim(),time:document.getElementById('mSTime').value,date:document.getElementById('mSDate').value,notes:document.getElementById('mSNotes').value.trim()};
+  const r=await API.post('medications',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('medications');
+    closeModal();toast('Schedule added!','success');renderNurseMedications();
+    return;
+  }
+  // Fallback: localStorage
+  const meds=DB.get('medications')||[];
+  meds.push({id:nextId(meds),patientId:body.patient_id,nurseId:currentUser.id,medicine:med,dosage:body.dosage,time:body.time,date:body.date,given:false,notes:body.notes});
+  DB.set('medications',meds);closeModal();toast('Schedule added (offline)!','success');renderNurseMedications();
+}
+function renderNurseVitals(){
+  const pts=DB.get('patients')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><h2>Record Patient Vitals</h2></div>
+      <div class="form-group"><label>Select Patient</label><select id="vtPt"><option value="">Select</option>${pts.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+      <button class="btn btn-primary" onclick="openVitalModal(parseInt(document.getElementById('vtPt').value))">Record Vitals</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Recent Vitals</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Patient</th><th>BP</th><th>Temp</th><th>Pulse</th><th>SpO₂</th><th>Date</th></tr></thead>
+          <tbody>${(DB.get('vitals')||[]).map(v=>{
+            const pt=pts.find(p=>p.id===v.patientId);
+            return `<tr><td>${pt?.name||'—'}</td><td>${v.bp||'—'}</td><td>${v.temp||'—'}°F</td><td>${v.pulse||'—'}</td><td>${v.spo2||'—'}%</td><td>${formatDate(v.date)}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function openVitalModal(ptId){
+  if(!ptId){toast('Select a patient first','');return;}
+  recordVitalModal(ptId);
+}
+function recordVitalModal(patientId){
+  const pt=(DB.get('patients')||[]).find(p=>p.id===patientId);
+  openModal('Record Vitals — '+pt?.name,`
+    <div class="form-row">
+      <div class="form-group"><label>Blood Pressure</label><input type="text" id="vBP" placeholder="120/80"></div>
+      <div class="form-group"><label>Temperature (°F)</label><input type="number" id="vTemp" step="0.1" placeholder="98.6"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Pulse Rate (bpm)</label><input type="number" id="vPulse" placeholder="72"></div>
+      <div class="form-group"><label>Respiratory Rate</label><input type="number" id="vRR" placeholder="16"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>SpO₂ (%)</label><input type="number" id="vSpo2" step="0.1" placeholder="98"></div>
+      <div class="form-group"><label>Weight (kg)</label><input type="number" id="vWeight" step="0.1" placeholder="65"></div>
+    </div>
+    <div class="form-group"><label>Height (cm)</label><input type="number" id="vHeight" placeholder="165"></div>
+    <div class="form-group"><label>Notes</label><textarea id="vNotes" placeholder="Observations..."></textarea></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveVitals(${patientId})">Save Vitals</button>`);
+}
+async function saveVitals(patientId){
+  const body={patient_id:patientId,bp:document.getElementById('vBP').value,temp:parseFloat(document.getElementById('vTemp').value)||null,pulse:parseInt(document.getElementById('vPulse').value)||null,rr:parseInt(document.getElementById('vRR').value)||null,spo2:parseFloat(document.getElementById('vSpo2').value)||null,weight:parseFloat(document.getElementById('vWeight').value)||null,height:parseFloat(document.getElementById('vHeight').value)||null,notes:document.getElementById('vNotes').value};
+  const r=await API.post('vitals',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('vitals');
+    closeModal();toast('Vitals recorded!','success');
+    return;
+  }
+  // Fallback: localStorage
+  const vitals=DB.get('vitals')||[];
+  vitals.push({id:nextId(vitals),patientId,nurseId:currentUser.id,...body,date:today()});
+  DB.set('vitals',vitals);closeModal();toast('Vitals recorded (offline)!','success');
+}
+function renderNurseBeds(){
+  const beds=DB.get('beds')||[];
+  const pts=DB.get('patients')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Bed</th><th>Ward</th><th>Type</th><th>Status</th><th>Patient</th></tr></thead>
+          <tbody>${beds.map(b=>{
+            const pt=pts.find(p=>p.id===b.patientId);
+            return `<tr><td><strong>${b.num}</strong></td><td>${b.ward}</td><td>${b.type}</td><td><span class="badge badge-${b.status==='available'?'active':'inactive'}">${b.status}</span></td><td>${pt?.name||'—'}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function renderNurseInstructions(){
+  const insts=DB.get('instructions')||[];
+  const pts=DB.get('patients')||[];
+  const docs=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      ${insts.length===0?`<div class="empty-state"><div class="es-icon">📋</div><p>No instructions from doctors</p></div>`
+      :insts.map(i=>{
+        const pt=pts.find(p=>p.id===i.patientId);
+        const doc=docs.find(d=>d.id===i.doctorId);
+        return `<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span class="badge ${i.priority==='high'?'badge-cancelled':i.priority==='urgent'?'badge-cancelled':'badge-scheduled'}" style="flex-shrink:0">${i.priority}</span>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:14px">${pt?.name||'—'}</div>
+            <div style="font-size:13px;margin:4px 0">${i.instruction}</div>
+            <div style="font-size:11px;color:var(--text3)">From: ${doc?.name||'Doctor'} • ${formatDate(i.date)}</div>
+          </div>
+          ${i.status==='pending'?`<button class="btn btn-success btn-sm" onclick="markInstructionDone(${i.id})">✓ Done</button>`:'<span class="badge badge-active">Completed</span>'}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+async function markInstructionDone(id){
+  const r=await API.put('instructions/'+id,{status:'done'});
+  if(r&&r.success){await DB.fetchAndCache('instructions');toast('Marked complete!','success');renderNurseInstructions();return;}
+  // Fallback: localStorage
+  const insts=DB.get('instructions')||[];
+  const i=insts.find(x=>x.id===id);if(!i)return;
+  i.status='completed';DB.set('instructions',insts);toast('Marked complete!','success');renderNurseInstructions();
+}
+
+// ============================================================
+// =================== RECEPTIONIST PANEL ===================
+// ============================================================
+function renderReceptionist(key){
+  if(key==='dashboard') renderReceptDashboard();
+  else if(key==='registerPatient') renderRegisterPatient();
+  else if(key==='appointments') renderReceptAppointments();
+  else if(key==='tokens') renderReceptTokens();
+  else if(key==='billing') renderReceptBilling();
+  else if(key==='doctors') renderReceptDoctors();
+}
+function renderReceptDashboard(){
+  const appts=DB.get('appointments')||[];
+  const todayA=appts.filter(a=>a.date===today());
+  const pts=DB.get('patients')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="cred-box" style="margin-bottom:20px">
+      <h4>Your Login Credentials</h4>
+      <div class="cred-item"><span>Email</span><code>${currentUser.email}</code></div>
+      <div class="cred-item"><span>Password</span><code>${currentUser.password}</code></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card red"><div class="stat-icon">📅</div><div class="stat-label">Today's Appointments</div><div class="stat-value">${todayA.length}</div></div>
+      <div class="stat-card green"><div class="stat-icon">👥</div><div class="stat-label">Total Patients</div><div class="stat-value">${pts.length}</div></div>
+      <div class="stat-card blue"><div class="stat-icon">⏳</div><div class="stat-label">Pending</div><div class="stat-value">${todayA.filter(a=>a.status==='scheduled').length}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Today's Tokens</h2><button class="btn btn-primary btn-sm" onclick="navTo('appointments')">+ Book Appointment</button></div>
+      ${todayA.length===0?`<div class="empty-state"><div class="es-icon">📅</div><p>No appointments today</p></div>`
+      :todayA.map(a=>{
+        const pt=pts.find(p=>p.id===a.patientId);
+        const doc=(DB.get('doctors')||[]).find(d=>d.id===a.doctorId);
+        return `<div class="token-card">
+          <div class="token-num">#${a.token}</div>
+          <div class="token-info"><h4>${pt?.name||'Patient'}</h4><p>Dr. ${doc?.name||'—'} • ${formatTime(a.time)}</p></div>
+          <div class="token-actions">
+            ${!a.checkedIn?`<button class="btn btn-success btn-sm" onclick="checkIn(${a.id})">Check In</button>`:''}
+            ${a.checkedIn&&!a.checkedOut?`<button class="btn btn-outline btn-sm" onclick="checkOut(${a.id})">Check Out</button>`:''}
+            ${a.checkedOut?`<span class="badge badge-completed">Completed</span>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function checkIn(id){
+  const appts=DB.get('appointments')||[];
+  const a=appts.find(x=>x.id===id);if(!a)return;
+  a.checkedIn=true;DB.set('appointments',appts);toast('Checked in!','success');renderReceptDashboard();
+}
+function checkOut(id){
+  const appts=DB.get('appointments')||[];
+  const a=appts.find(x=>x.id===id);if(!a)return;
+  a.checkedOut=true;a.status='completed';DB.set('appointments',appts);toast('Checked out!','success');renderReceptDashboard();
+}
+function renderRegisterPatient(){
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card" style="max-width:600px">
+      <div class="card-header"><h2>Register New Patient</h2></div>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="rpName" placeholder="Patient full name"></div>
+        <div class="form-group"><label>Age *</label><input type="number" id="rpAge" placeholder="Age" min="1"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Mobile *</label><input type="tel" id="rpMobile" placeholder="10-digit mobile"></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="rpEmail" placeholder="Email address"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Gender</label><select id="rpGender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="form-group"><label>Blood Group</label><select id="rpBlood"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+      </div>
+      <div class="form-group"><label>Address</label><textarea id="rpAddr" placeholder="Patient address..." rows="2"></textarea></div>
+      <div class="form-group"><label>Emergency Contact</label><input type="tel" id="rpEmerg" placeholder="Emergency contact number"></div>
+      <div class="alert alert-info" style="margin-bottom:16px">Patient login password will be set to their mobile number by default.</div>
+      <button class="btn btn-primary" onclick="registerPatient()">Register Patient</button>
+    </div>
+  `;
+}
+async function registerPatient(){
+  const name=document.getElementById('rpName').value.trim();
+  const age=document.getElementById('rpAge').value;
+  const mobile=document.getElementById('rpMobile').value.trim();
+  const email=document.getElementById('rpEmail').value.trim();
+  const gender=document.getElementById('rpGender').value;
+  const blood_group=document.getElementById('rpBlood').value;
+  const address=document.getElementById('rpAddr').value.trim();
+  const emergency_contact=document.getElementById('rpEmerg').value.trim();
+  if(!name||!age||!mobile||!email){toast('Fill required fields','');return;}
+
+  // Try API first — saves directly to MySQL
+  const r=await API.post('patients',{
+    name, email, password: mobile,
+    age: parseInt(age), gender, mobile,
+    blood_group, address, emergency_contact,
+    joined_date: today()
+  });
+  if(r&&r.success){
+    await DB.fetchAndCache('patients'); // refresh localStorage cache from MySQL
+    toast(`Patient registered! Login: ${email} / ${mobile}`,'success');
+    document.getElementById('rpName').value='';document.getElementById('rpAge').value='';
+    document.getElementById('rpMobile').value='';document.getElementById('rpEmail').value='';
+    document.getElementById('rpAddr').value='';document.getElementById('rpEmerg').value='';
+    return;
+  }
+
+  // Fallback: localStorage only (when API/server is offline)
+  const patients=DB.get('patients')||[];
+  if(patients.find(p=>p.email===email)){toast('Email already registered','');return;}
+  patients.push({id:nextId(patients),name,age:parseInt(age),mobile,email,password:mobile,gender,blood:blood_group,address,emergency:emergency_contact,joined:today()});
+  DB.set('patients',patients);
+  toast(`Patient registered (offline)! Login: ${email} / ${mobile}`,'success');
+  document.getElementById('rpName').value='';document.getElementById('rpAge').value='';
+  document.getElementById('rpMobile').value='';document.getElementById('rpEmail').value='';
+  document.getElementById('rpAddr').value='';document.getElementById('rpEmerg').value='';
+}
+function renderReceptAppointments(){
+  const doctors=DB.get('doctors')||[];
+  const patients=DB.get('patients')||[];
+  const appts=DB.get('appointments')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card">
+        <div class="card-header"><h2>Book Appointment</h2></div>
+        <div class="form-group"><label>Patient *</label><select id="rAPt"><option value="">Select patient</option>${patients.map(p=>`<option value="${p.id}">${p.name} (${p.mobile})</option>`).join('')}</select></div>
+        <div class="form-group"><label>Doctor *</label><select id="rADoc"><option value="">Select doctor</option>${doctors.filter(d=>d.status==='active').map(d=>`<option value="${d.id}">${d.name} — ${d.specialization}</option>`).join('')}</select></div>
+        <div class="form-row">
+          <div class="form-group"><label>Date *</label><input type="date" id="rADate" min="${today()}"></div>
+          <div class="form-group"><label>Time</label><select id="rATime">${['09:00','09:30','10:00','10:30','11:00','14:00','14:30','15:00','15:30','16:00'].map(t=>`<option>${t}</option>`).join('')}</select></div>
+        </div>
+        <div class="form-group"><label>Reason</label><input type="text" id="rAReason" placeholder="Reason for visit"></div>
+        <button class="btn btn-primary btn-full" onclick="bookReceptAppt()">Book Appointment</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>Today's Appointments</h2></div>
+        ${appts.filter(a=>a.date===today()).map(a=>{
+          const pt=patients.find(p=>p.id===a.patientId);
+          const doc=doctors.find(d=>d.id===a.doctorId);
+          return `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+            <span class="token-num" style="width:36px;height:36px;font-size:14px">#${a.token}</span>
+            <div><div style="font-size:13px;font-weight:600">${pt?.name||'—'}</div><div style="font-size:11px;color:var(--text3)">${doc?.name} • ${formatTime(a.time)}</div></div>
+            <span class="badge badge-${a.status}" style="margin-left:auto;align-self:flex-start">${a.status}</span>
+          </div>`;
+        }).join('')||`<div class="empty-state"><div class="es-icon">📅</div><p>No appointments today</p></div>`}
+      </div>
+    </div>
+  `;
+}
+async function bookReceptAppt(){
+  const ptId=parseInt(document.getElementById('rAPt').value);
+  const docId=parseInt(document.getElementById('rADoc').value);
+  const date=document.getElementById('rADate').value;
+  const time=document.getElementById('rATime').value;
+  const reason=document.getElementById('rAReason').value;
+  if(!ptId||!docId||!date){toast('Fill required fields','');return;}
+  const r=await API.post('appointments',{patient_id:ptId,doctor_id:docId,appointment_date:date,appointment_time:time||'09:00',reason,type:'in-person',status:'scheduled',created_by:'receptionist'});
+  if(r&&r.success){
+    await DB.fetchAndCache('appointments');
+    toast(`Appointment booked! Token #${r.token||'—'}`,'success');
+    renderReceptAppointments();return;
+  }
+  // Fallback: localStorage only when API/server offline
+  const appts=DB.get('appointments')||[];
+  const token=appts.filter(a=>a.doctorId===docId&&a.date===date).length+1;
+  appts.push({id:nextId(appts),patientId:ptId,doctorId:docId,date,time,token,status:'scheduled',reason,type:'in-person',createdBy:'receptionist',checkedIn:false,checkedOut:false});
+  DB.set('appointments',appts);
+  toast(`Appointment booked (offline)! Token #${token}`,'success');
+  renderReceptAppointments();
+}
+function renderReceptTokens(){
+  const appts=(DB.get('appointments')||[]).filter(a=>a.date===today());
+  const pts=DB.get('patients')||[];
+  const docs=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="card-header"><h2>Token Management — ${formatDate(today())}</h2></div>
+      ${appts.length===0?`<div class="empty-state"><div class="es-icon">🎟️</div><p>No tokens issued today</p></div>`
+      :appts.sort((a,b)=>a.token-b.token).map(a=>{
+        const pt=pts.find(p=>p.id===a.patientId);
+        const doc=docs.find(d=>d.id===a.doctorId);
+        return `<div class="token-card">
+          <div class="token-num">#${a.token}</div>
+          <div class="token-info"><h4>${pt?.name||'—'}</h4><p>${doc?.name||'—'} • ${formatTime(a.time)} • ${doc?.specialization||''}</p></div>
+          <div class="token-actions">
+            ${!a.checkedIn?`<button class="btn btn-success btn-sm" onclick="checkIn(${a.id})">✓ Check In</button>`
+            :!a.checkedOut?`<button class="btn btn-outline btn-sm" onclick="checkOut(${a.id})">Check Out</button>`
+            :`<span class="badge badge-completed">Done</span>`}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function renderReceptBilling(){
+  const patients=DB.get('patients')||[];
+  const bills=DB.get('bills')||[];
+  document.getElementById('pageActions').innerHTML=`<button class="btn btn-primary" onclick="createBillModal()">+ Create Bill</button>`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Invoice</th><th>Patient</th><th>Total</th><th>Paid</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>${bills.map(b=>{
+            const pt=patients.find(p=>p.id===b.patientId);
+            return `<tr><td style="font-family:monospace;font-size:12px">${b.invoice}</td><td>${pt?.name||'—'}</td><td>₹${b.total.toLocaleString()}</td><td>₹${b.paid.toLocaleString()}</td><td><span class="badge badge-${b.status}">${b.status}</span></td>
+            <td>${b.status==='pending'?`<button class="btn btn-success btn-sm" onclick="markBillPaid(${b.id})">Mark Paid</button>`:'—'}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function createBillModal(){
+  const patients=DB.get('patients')||[];
+  openModal('Create Bill',`
+    <div class="form-group"><label>Patient *</label><select id="bPt"><option value="">Select</option>${patients.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+    <div id="billItems">
+      <div class="bill-item" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:8px">
+        <input type="text" class="bDesc" placeholder="Item description" style="padding:8px;border:1.5px solid var(--border);border-radius:6px">
+        <input type="number" class="bQty" placeholder="Qty" value="1" min="1" style="padding:8px;border:1.5px solid var(--border);border-radius:6px">
+        <input type="number" class="bPrice" placeholder="Price" min="0" style="padding:8px;border:1.5px solid var(--border);border-radius:6px">
+      </div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="addBillItem()" style="margin-bottom:16px">+ Add Item</button>
+    <div class="form-row">
+      <div class="form-group"><label>Discount (₹)</label><input type="number" id="bDiscount" value="0" min="0"></div>
+      <div class="form-group"><label>Payment Method</label><select id="bMethod"><option>Cash</option><option>Card</option><option>UPI</option><option>Insurance</option></select></div>
+    </div>
+    <div class="form-group"><label>Status</label><select id="bStatus"><option>pending</option><option>paid</option></select></div>
+  `,`<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveBill()">Create Bill</button>`);
+}
+function addBillItem(){
+  const container=document.getElementById('billItems');
+  const div=document.createElement('div');
+  div.className='bill-item';
+  div.style.cssText='display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:8px;align-items:center';
+  div.innerHTML=`<input type="text" class="bDesc" placeholder="Item" style="padding:8px;border:1.5px solid var(--border);border-radius:6px">
+    <input type="number" class="bQty" value="1" min="1" style="padding:8px;border:1.5px solid var(--border);border-radius:6px">
+    <input type="number" class="bPrice" placeholder="Price" style="padding:8px;border:1.5px solid var(--border);border-radius:6px">
+    <button onclick="this.closest('.bill-item').remove()" style="background:var(--red-light);border:none;color:var(--red);border-radius:6px;padding:8px;cursor:pointer">✕</button>`;
+  container.appendChild(div);
+}
+async function saveBill(){
+  const ptId=parseInt(document.getElementById('bPt').value);
+  if(!ptId){toast('Select patient','');return;}
+  const items=[...document.querySelectorAll('.bill-item')].map(row=>({desc:row.querySelector('.bDesc')?.value.trim(),qty:parseInt(row.querySelector('.bQty')?.value)||1,price:parseFloat(row.querySelector('.bPrice')?.value)||0})).filter(i=>i.desc&&i.price);
+  if(items.length===0){toast('Add at least one item','');return;}
+  const discount=parseFloat(document.getElementById('bDiscount').value)||0;
+  const total=items.reduce((s,i)=>s+i.qty*i.price,0)-discount;
+  const status=document.getElementById('bStatus').value;
+  const body={patient_id:ptId,total,discount,status,method:document.getElementById('bMethod').value,date:today(),items};
+  const r=await API.post('bills',body);
+  if(r&&r.success){
+    await DB.fetchAndCache('bills');
+    closeModal();toast(`Bill created: ${r.invoice}`,'success');renderReceptBilling();
+    return;
+  }
+  // Fallback: localStorage
+  const bills=DB.get('bills')||[];
+  const invoice=`INV-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${(1000+bills.length).toString()}`;
+  bills.push({id:nextId(bills),patientId:ptId,total,paid:status==='paid'?total:0,discount,status,method:body.method,invoice,date:today(),items:items.map(i=>({desc:i.desc,qty:i.qty,price:i.price,total:i.qty*i.price}))});
+  DB.set('bills',bills);closeModal();toast(`Bill created (offline): ${invoice}`,'success');renderReceptBilling();
+}
+async function markBillPaid(id){
+  const bills=DB.get('bills')||[];const b=bills.find(x=>x.id===id);if(!b)return;
+  const r=await API.put('bills/'+id,{paid_amount:b.total,status:'paid'});
+  if(r&&r.success){ await DB.fetchAndCache('bills'); toast('Bill marked as paid!','success'); renderReceptBilling(); return; }
+  b.paid=b.total;b.status='paid';DB.set('bills',bills);toast('Bill marked as paid (offline)!','success');renderReceptBilling();
+}
+function renderReceptDoctors(){
+  const doctors=DB.get('doctors')||[];
+  document.getElementById('contentArea').innerHTML=`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Doctor</th><th>Specialization</th><th>Available Days</th><th>Fee</th><th>Status</th></tr></thead>
+          <tbody>${doctors.map(d=>`
+            <tr><td><strong>${d.name}</strong><br><span style="font-size:11px;color:var(--text3)">${d.department}</span></td><td>${d.specialization}</td><td style="font-size:12px">${d.days}</td><td>₹${d.fee}</td><td><span class="badge badge-${d.status}">${d.status}</span></td></tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+initDB();
+showLanding();
+</script>
+</body>
+</html>
